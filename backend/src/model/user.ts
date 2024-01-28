@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 export type UserSchemaType = {
   _id: string;
@@ -22,6 +23,17 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+userSchema.pre("save", function encrypt(next) {
+  if (this.isModified("password")) {
+    this.password = bcrypt.hashSync(
+      this.password,
+      parseInt(process.env.SALT_ROUNDS as string),
+    );
+  }
+  next();
+});
+
 
 const User = mongoose.model<UserSchemaType>("User", userSchema);
 
