@@ -1,12 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 import bcrypt from "bcryptjs";
 
-export type UserSchemaType = {
+export interface UserSchemaType extends Document {
   _id: string;
   username: string;
   email: string;
   password: string;
-};
+  isPasswordCorrect(plainText: string): boolean;
+}
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -34,6 +35,9 @@ userSchema.pre("save", function encrypt(next) {
   next();
 });
 
+userSchema.methods.isPasswordCorrect = function (plainText: string) {
+  return bcrypt.compareSync(plainText, this.password);
+};
 
 const User = mongoose.model<UserSchemaType>("User", userSchema);
 
