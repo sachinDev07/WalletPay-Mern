@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import zod from "zod";
 
 import User from "../model/user";
+import * as Auth from "../utils/common/auth";
 
 const userSchema = zod.object({
   username: zod
@@ -25,7 +26,9 @@ async function signup(req: Request, res: Response) {
 
     const user = await User.create(validatedUserData);
     await user.save();
-    return res.status(200).json({ user, message: "User created successfully" });
+    return res
+      .status(200)
+      .json({ data: user, message: "User created successfully" });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });
@@ -51,7 +54,8 @@ async function signin(req: Request, res: Response) {
       return res.status(400).json({ error: "Invalid password" });
     }
 
-    return res.status(200).json({ user, message: "User sign in successfully" });
+    const jwt = Auth.createToken({ id: user._id, email: user.email });
+    return res.status(200).json({ data: jwt, message: "Successfully created new token"});
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });
