@@ -3,16 +3,6 @@ import { CustomRequest } from "../custome.d";
 
 import { isAuthenticated } from "../controllers/user-controller";
 
-interface ResponseType {
-  username: string;
-  email: string;
-  password: string;
-}
-
-function isUser(value: ResponseType | void): value is ResponseType {
-  return !!value;
-}
-
 async function checkAuth(
   req: CustomRequest,
   res: Response,
