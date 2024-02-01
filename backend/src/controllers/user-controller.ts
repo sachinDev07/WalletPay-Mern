@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import zod from "zod";
+import { JwtPayload } from "jsonwebtoken";
 
 import User from "../model/user";
 import * as Auth from "../utils/common/auth";
@@ -55,7 +56,9 @@ async function signin(req: Request, res: Response) {
     }
 
     const jwt = Auth.createToken({ id: user._id, email: user.email });
-    return res.status(200).json({ data: jwt, message: "Successfully created new token"});
+    return res
+      .status(200)
+      .json({ data: jwt, message: "Successfully created new token" });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });
@@ -66,4 +69,25 @@ async function signin(req: Request, res: Response) {
   }
 }
 
-export { signup, signin };
+async function isAuthenticated(token: string) {
+  try {
+    const response: JwtPayload = Auth.verifyToken(token);
+    const user = await User.findOne({ _id: response.id });
+    if (!user) {
+      return new Error("No user found");
+    }
+    return user;
+  } catch (error: any) {
+    if (error instanceof Error) throw error;
+    if (error.name == "JsonWebTokenError") {
+      throw new Error("Invalid JWT token");
+    }
+    if (error.name == "TokenExpiredError") {
+      throw new Error("JWT token expired");
+    }
+    console.log(error);
+    throw new Error("Something went wrong");
+  }
+}
+
+export { signup, signin, isAuthenticated };
