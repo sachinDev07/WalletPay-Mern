@@ -4,6 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 
 import User from "../model/user";
 import * as Auth from "../utils/common/auth";
+import { CustomRequest } from "../custome";
 
 const userSchema = zod.object({
   username: zod
@@ -90,4 +91,37 @@ async function isAuthenticated(token: string) {
   }
 }
 
-export { signup, signin, isAuthenticated };
+async function updateUserInformation(req: CustomRequest, res: Response) {
+  console.log("update: ");
+  try {
+    const { success } = userSchema.safeParse(req.body);
+    if (!success) {
+      res.status(411).json({ message: "Error while updating the user" });
+    }
+
+    const { username, email } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      req.user?._id,
+      {
+        $set: {
+          username,
+          email,
+        },
+      },
+      { new: true },
+    ).select("-password");
+
+    return res
+      .status(200)
+      .json({ data: user, message: "Update successfully!" });
+  } catch (error: any) {
+    console.error(error);
+    if (error.statusCode === 404) {
+      res.status(404).json("The user requested to update is not present");
+    }
+    res.status(500).json({ message: "Cannot not update the user information" });
+  }
+}
+
+export { signup, signin, isAuthenticated, updateUserInformation };
