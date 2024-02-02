@@ -9,11 +9,13 @@ async function checkAuth(
   next: NextFunction,
 ) {
   try {
-    const token = req.headers["x-access-token"] as string;
-    
-    if (!token) {
+    const authHeader = req.headers.authorization as string;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({ error: "JWT Token is missing" });
     }
+
+    const token = authHeader.split(" ")[1];
 
     const response = await isAuthenticated(token);
 
@@ -24,7 +26,7 @@ async function checkAuth(
     next();
   } catch (error) {
     console.error(error);
-    res.status(401).json({error: error});
+    res.status(401).json({ error: error });
   }
 }
 
