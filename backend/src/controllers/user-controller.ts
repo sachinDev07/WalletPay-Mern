@@ -59,7 +59,7 @@ async function signin(req: Request, res: Response) {
     const jwt = Auth.createToken({ id: user._id, email: user.email });
     return res
       .status(200)
-      .json({ data: jwt, message: "Successfully created new token" });
+      .json({ token: jwt, message: "Successfully created new token" });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });
@@ -114,7 +114,7 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
 
     return res
       .status(200)
-      .json({ data: user, message: "Update successfully!" });
+      .json({ data: user, message: "Updated successfully!" });
   } catch (error: any) {
     console.error(error);
     if (error.statusCode === 404) {
@@ -124,4 +124,28 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
   }
 }
 
-export { signup, signin, isAuthenticated, updateUserInformation };
+async function getUsers(req: Request, res: Response) {
+  try {
+    const filter = req.query.filter || "";
+
+    const users = await User.find({
+      username: {
+        $regex: filter,
+        $options: "i",
+      },
+    }).select("-password");
+
+    if (!users) {
+      res.status(404).json({ error: "No user found!" });
+    }
+
+    res.status(200).json({ data: users, message: "User found successfully!" });
+  } catch (error) {
+    console.error("woww: ", error);
+    res
+      .status(500)
+      .json({ error: "Something went wrong while searching for the user" });
+  }
+}
+
+export { signup, signin, isAuthenticated, updateUserInformation, getUsers };
