@@ -5,6 +5,7 @@ import { JwtPayload } from "jsonwebtoken";
 import User from "../model/user";
 import * as Auth from "../utils/common/auth";
 import { CustomRequest } from "../custome";
+import Account from "../model/account";
 
 const userSchema = zod.object({
   username: zod
@@ -28,6 +29,12 @@ async function signup(req: Request, res: Response) {
 
     const user = await User.create(validatedUserData);
     await user.save();
+
+    await Account.create({
+      userId: user._id,
+      balance: Math.floor(1 + Math.random() * 10000),
+    });
+
     return res
       .status(200)
       .json({ data: user, message: "User created successfully" });
