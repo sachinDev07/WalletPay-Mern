@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get("/account/balance", checkAuth, AccountController.getUserBalance);
 
+router.post("/account/transfer", checkAuth, AccountController.handleTransfer);
 
 
 export default router;
