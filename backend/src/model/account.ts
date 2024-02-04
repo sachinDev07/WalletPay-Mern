@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export interface AccountTypeSchema {
+  _id: string;
   userId: string;
   balance: number;
 }
