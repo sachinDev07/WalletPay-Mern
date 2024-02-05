@@ -1,11 +1,11 @@
+import { Outlet } from "react-router-dom";
 
 function App() {
-
   return (
-    <div className="text-green-500">
-      hello World
-    </div>
-  )
+    <>
+      <Outlet />
+    </>
+  );
 }
 
-export default App
+export default App;
