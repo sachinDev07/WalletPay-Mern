@@ -6,8 +6,8 @@ const InputBox = ({
   placeholder: string;
 }) => {
   return (
-    <div>
-      <label className="text-sm font-medium text-left py-2">
+    <div className="mb-2">
+      <label className="font-medium text-left py-2">
         {lable}
         <input
           placeholder={placeholder}
