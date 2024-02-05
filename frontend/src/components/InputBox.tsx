@@ -3,7 +3,7 @@ const InputBox = ({
   placeholder,
 }: {
   lable: string;
-  placeholder: string;
+  placeholder?: string;
 }) => {
   return (
     <div className="mb-2">
