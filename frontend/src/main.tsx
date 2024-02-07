@@ -8,14 +8,13 @@ import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
 import SendMoney from "./pages/SendMoney";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
       {
-        path: "/signup",
+        path: "/",
         element: <SignUp />,
       },
       {

@@ -1,3 +1,5 @@
+import User from "./User";
+
 export const Users = () => {
   return (
     <>
@@ -6,8 +8,11 @@ export const Users = () => {
         <input
           type="text"
           placeholder="Search users..."
-          className="w-full px-2 py-1 border rounded border-slate-200"
+          className="w-full px-2 py-1 border rounded border-slate-400"
         ></input>
+      </div>
+      <div>
+        <User firstChar={"S"} firstName={"Sachin"} lastName={"Kumar"} />
       </div>
     </>
   );
