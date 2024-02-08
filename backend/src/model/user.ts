@@ -3,14 +3,19 @@ import bcrypt from "bcryptjs";
 
 export interface UserSchemaType extends Document {
   _id: string;
-  username: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
   isPasswordCorrect(plainText: string): boolean;
 }
 
 const userSchema = new mongoose.Schema({
-  username: {
+  firstname: {
+    type: String,
+    required: true,
+  },
+  lastname: {
     type: String,
     required: true,
   },

@@ -8,7 +8,10 @@ import { CustomRequest } from "../custome";
 import Account from "../model/account";
 
 const userSchema = zod.object({
-  username: zod
+  firstname: zod
+    .string()
+    .min(3, { message: "Must be 3 or more characters long" }),
+  lastname: zod
     .string()
     .min(3, { message: "Must be 3 or more characters long" }),
   email: zod.string().email({ message: "Invalid email address" }),
@@ -106,13 +109,14 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
       res.status(411).json({ message: "Error while updating the user" });
     }
 
-    const { username, email } = req.body;
+    const { firstname, lastname, email } = req.body;
 
     const user = await User.findByIdAndUpdate(
       req.user?._id,
       {
         $set: {
-          username,
+          firstname,
+          lastname,
           email,
         },
       },
@@ -136,10 +140,18 @@ async function getUsers(req: Request, res: Response) {
     const filter = req.query.filter || "";
 
     const users = await User.find({
-      username: {
-        $regex: filter,
-        $options: "i",
-      },
+      $or: [
+        {
+          firstname: {
+            $regex: filter,
+          },
+        },
+        {
+          lastname: {
+            $regex: filter,
+          },
+        },
+      ],
     }).select("-password");
 
     if (!users) {
