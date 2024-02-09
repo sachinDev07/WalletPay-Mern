@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import BottomWarning from "../components/BottomWarning";
 import Button from "../components/Button";
@@ -6,6 +6,7 @@ import Heading from "../components/Heading";
 import InputBox from "../components/InputBox";
 import SubHeading from "../components/SubHeading";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface UserDetails {
   firstname: string;
@@ -15,27 +16,28 @@ interface UserDetails {
 }
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [firstname, setFirstname] = useState<string>("");
   const [lastname, setLastname] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+
   async function signupApi() {
     try {
-      const response = await axios.post<UserDetails>(
-        "https://localhost:7001/api/v1/users/signup",
+      await axios.post<UserDetails>(
+        "http://localhost:7001/api/v1/users/signup",
         { firstname, lastname, email, password },
       );
-      const data = response.data;
-      console.log(data);
     } catch (error) {
-      console.error(error);
+      console.error("err" + error);
     }
   }
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function handleSubmit() {
     signupApi();
+    navigate("/signin");
   }
 
   return (
@@ -44,39 +46,37 @@ const SignUp = () => {
         <div className="rounded-lg bg-white w-80 p-2 h-max px-4">
           <Heading label={"Sign Up"} />
           <SubHeading label={"Enter your information to create an account"} />
-          <form onSubmit={handleSubmit} action="">
-            <InputBox
-              onchange={(e: ChangeEvent<HTMLInputElement>) =>
-                setFirstname(e.target.value)
-              }
-              lable={"first Name"}
-              placeholder={"John"}
-            />
-            <InputBox
-              onchange={(e: ChangeEvent<HTMLInputElement>) =>
-                setLastname(e.target.value)
-              }
-              lable={"last Name"}
-              placeholder={"Doe"}
-            />
-            <InputBox
-              onchange={(e: ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
-              lable={"Email"}
-              placeholder={"example@gmail.com"}
-            />
-            <InputBox
-              onchange={(e: ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
-              lable={"Password"}
-              placeholder={"1x2y3z@password"}
-            />
-            <div className="pt-4 text-center">
-              <Button label={"Sign up"} />
-            </div>
-          </form>
+          <InputBox
+            onchange={(e: ChangeEvent<HTMLInputElement>) =>
+              setFirstname(e.target.value)
+            }
+            lable={"first Name"}
+            placeholder={"John"}
+          />
+          <InputBox
+            onchange={(e: ChangeEvent<HTMLInputElement>) =>
+              setLastname(e.target.value)
+            }
+            lable={"last Name"}
+            placeholder={"Doe"}
+          />
+          <InputBox
+            onchange={(e: ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
+            lable={"Email"}
+            placeholder={"example@gmail.com"}
+          />
+          <InputBox
+            onchange={(e: ChangeEvent<HTMLInputElement>) =>
+              setPassword(e.target.value)
+            }
+            lable={"Password"}
+            placeholder={"1x2y3z@password"}
+          />
+          <div className="pt-4 text-center">
+            <Button onclick={handleSubmit} label={"Sign up"} />
+          </div>
 
           <BottomWarning
             label={"Already have an account?"}
