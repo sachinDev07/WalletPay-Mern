@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
+import Toast from "./components/Toast";
 
 function App() {
   const location = useLocation();
@@ -9,6 +10,7 @@ function App() {
     <>
       {displayHeader && <Header />}
       <Outlet />
+      <Toast />
     </>
   );
 }
