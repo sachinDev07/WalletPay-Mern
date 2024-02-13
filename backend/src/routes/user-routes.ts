@@ -11,6 +11,6 @@ router.post("/users/signin", UserController.signin);
 
 router.put("/users/update", checkAuth, UserController.updateUserInformation);
 
-router.get("/users/", checkAuth, UserController.getUsers);
+router.get("/users", checkAuth, UserController.getUsers);
 
 export default router;

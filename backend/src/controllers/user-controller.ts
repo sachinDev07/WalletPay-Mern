@@ -54,7 +54,7 @@ async function signup(req: Request, res: Response) {
     }
 
     console.error(error);
-    res.status(500).json({ error: "Something went wrong!" });
+    return res.status(500).json({ error: "Something went wrong!" });
   }
 }
 
@@ -83,7 +83,7 @@ async function signin(req: Request, res: Response) {
     }
 
     console.error(error);
-    res.status(500).json({ error: "Something went wrong!" });
+    return res.status(500).json({ error: "Something went wrong!" });
   }
 }
 
@@ -112,7 +112,7 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
   try {
     const { success } = userSignUpSchema.safeParse(req.body);
     if (!success) {
-      res.status(411).json({ message: "Error while updating the user" });
+      return res.status(411).json({ message: "Error while updating the user" });
     }
 
     const { firstname, lastname, password } = req.body;
@@ -135,9 +135,13 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
   } catch (error: any) {
     console.error(error);
     if (error.statusCode === 404) {
-      res.status(404).json("The user requested to update is not present");
+      return res
+        .status(404)
+        .json("The user requested to update is not present");
     }
-    res.status(500).json({ message: "Cannot not update the user information" });
+    return res
+      .status(500)
+      .json({ message: "Cannot not update the user information" });
   }
 }
 
@@ -145,29 +149,37 @@ async function getUsers(req: Request, res: Response) {
   try {
     const filter = req.query.filter || "";
 
+    console.log("filter " + filter);
+
     const users = await User.find({
       $or: [
         {
           firstname: {
             $regex: filter,
+            $options: "i",
           },
         },
         {
           lastname: {
             $regex: filter,
+            $options: "i",
           },
         },
       ],
     }).select("-password");
 
-    if (!users) {
-      res.status(404).json({ error: "No user found!" });
+    console.log("users: " + users.length);
+
+    if (users.length === 0) {
+      return res.status(404).json({ error: "No user found!" });
     }
 
-    res.status(200).json({ data: users, message: "User found successfully!" });
+    return res
+      .status(200)
+      .json({ data: users, message: "User found successfully!" });
   } catch (error) {
-    console.error("woww: ", error);
-    res
+    console.error(error);
+    return res
       .status(500)
       .json({ error: "Something went wrong while searching for the user" });
   }
