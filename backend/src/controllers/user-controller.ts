@@ -7,7 +7,7 @@ import * as Auth from "../utils/common/auth";
 import { CustomRequest } from "../custome";
 import Account from "../model/account";
 
-const userSchema = zod.object({
+const userSignUpSchema = zod.object({
   firstname: zod
     .string()
     .min(3, { message: "Must be 3 or more characters long" }),
@@ -20,9 +20,16 @@ const userSchema = zod.object({
     .min(5, { message: "Must be 5 or more characters long" }),
 });
 
+const userSignInSchema = zod.object({
+  email: zod.string().email({ message: "Invalid email address" }),
+  password: zod
+    .string()
+    .min(5, { message: "Must be 5 or more characters long" }),
+});
+
 async function signup(req: Request, res: Response) {
   try {
-    const validatedUserData = userSchema.parse(req.body);
+    const validatedUserData = userSignUpSchema.parse(req.body);
     const existedUser = await User.findOne({ email: validatedUserData.email });
     if (existedUser) {
       return res
@@ -53,7 +60,7 @@ async function signup(req: Request, res: Response) {
 
 async function signin(req: Request, res: Response) {
   try {
-    const validatedUserData = userSchema.parse(req.body);
+    const validatedUserData = userSignInSchema.parse(req.body);
     const user = await User.findOne({ email: validatedUserData.email });
     if (!user) {
       return res
@@ -69,7 +76,7 @@ async function signin(req: Request, res: Response) {
     const jwt = Auth.createToken({ id: user._id, email: user.email });
     return res
       .status(200)
-      .json({ token: jwt, message: "Successfully created new token" });
+      .json({ token: jwt, message: "Successfully sign in the user" });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });
@@ -102,14 +109,13 @@ async function isAuthenticated(token: string) {
 }
 
 async function updateUserInformation(req: CustomRequest, res: Response) {
-  console.log("update: ");
   try {
-    const { success } = userSchema.safeParse(req.body);
+    const { success } = userSignUpSchema.safeParse(req.body);
     if (!success) {
       res.status(411).json({ message: "Error while updating the user" });
     }
 
-    const { firstname, lastname, email } = req.body;
+    const { firstname, lastname, password } = req.body;
 
     const user = await User.findByIdAndUpdate(
       req.user?._id,
@@ -117,11 +123,11 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
         $set: {
           firstname,
           lastname,
-          email,
+          password,
         },
       },
       { new: true },
-    ).select("-password");
+    ).select("-email");
 
     return res
       .status(200)
