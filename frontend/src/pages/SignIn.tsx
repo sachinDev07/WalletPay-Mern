@@ -37,6 +37,8 @@ const SignIn = () => {
         data,
       );
       const responseData = response.data;
+      const token = responseData.token;
+      localStorage.setItem("token", token);
       toast.success(responseData.message);
       navigate("/dashboard");
     } catch (error) {
@@ -45,7 +47,7 @@ const SignIn = () => {
         if (error.response) {
           toast.error(error.response.data.message);
         } else {
-          console.error(error)
+          console.error(error);
           toast.error("An error occurred");
         }
       } else {
