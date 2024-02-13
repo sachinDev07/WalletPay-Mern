@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -17,6 +17,11 @@ type FormData = {
 interface UserDetails {
   data: FormData;
   message: string;
+}
+
+interface ValidationError {
+  message: string;
+  errors: Record<string, string[]>;
 }
 
 const SignUp = () => {
@@ -37,7 +42,15 @@ const SignUp = () => {
       toast.success(responseData.message);
       navigate("/signin");
     } catch (error) {
-      console.error("Error: ", error);
+      if (axios.isAxiosError<ValidationError>(error)) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("An error occurred");
+        }
+      } else {
+        toast.error("An error occurred");
+      }
     }
   };
 
