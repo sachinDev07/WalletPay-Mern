@@ -67,6 +67,7 @@ export const Users = () => {
         {users?.map((user) => (
           <User
             key={user._id}
+            id={user._id}
             firstChar={user.firstname.charAt(0)}
             firstName={user.firstname}
             lastName={user.lastname}

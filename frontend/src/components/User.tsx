@@ -1,14 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 
-const User = ({
-  firstChar,
-  firstName,
-  lastName,
-}: {
+interface UserDetails {
+  id: string;
   firstChar: string;
   firstName: string;
   lastName: string;
-}) => {
+}
+
+const User = ({ id, firstChar, firstName, lastName }: UserDetails) => {
+  const navigate = useNavigate();
+  const handleNavigation = () => {
+    navigate("/send?id=" + id + "&name=" + firstName);
+  };
   return (
     <div className="flex justify-between mt-4">
       <div className="flex">
@@ -17,15 +21,15 @@ const User = ({
             {firstChar}
           </div>
         </div>
-        <div className="flex flex-col justify-center h-ful">
+        <div className="flex flex-col justify-center h-full">
           <div>
             {firstName} {lastName}
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col justify-center h-ful">
-        <Button label={"Send Money"} />
+      <div className="flex flex-col justify-center h-full">
+        <Button onclick={handleNavigation} label={"Send Money"} />
       </div>
     </div>
   );
