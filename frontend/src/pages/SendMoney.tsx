@@ -1,11 +1,55 @@
+import axios from "axios";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+
+type ResponseType = {
+  message: string;
+};
+
+interface ValidationError {
+  message: string;
+  errors: Record<string, string[]>;
+}
 
 export const SendMoney = () => {
   const [searchParams] = useSearchParams();
-  const name = searchParams.get("name");
+  const id = searchParams.get("id") as string;
+  const name = searchParams.get("name") as string;
+  const navigate = useNavigate();
 
   const [amount, setAmount] = useState<number>(0);
+  const [token] = useState<string | null>(localStorage.getItem("token"));
+
+  const handleAmount = async () => {
+    try {
+      if (!token) {
+        toast.error("User is not authenticated.");
+        return;
+      }
+      const response = await axios.post<ResponseType>(
+        "http://localhost:7001/api/v1/account/transfer",
+        { amount, to: id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const data = response.data;
+      toast.success(data.message);
+      navigate("/dashboard");
+    } catch (error) {
+      if (axios.isAxiosError<ValidationError>(error)) {
+        if (error.response) {
+          toast.info(error.response.data.message);
+        }
+      } else {
+        toast.error("An error occurred");
+      }
+      console.error(error);
+    }
+  };
 
   return (
     <div className="flex justify-center h-[calc(100vh-3.5rem)] bg-gray-100">
@@ -18,7 +62,7 @@ export const SendMoney = () => {
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
                 <span className="text-2xl font-bold text-white">
-                  {name?.charAt(0)}
+                  {name?.charAt(0).toUpperCase()}
                 </span>
               </div>
               <h3 className="text-3xl font-semibold">{name}</h3>
@@ -39,7 +83,10 @@ export const SendMoney = () => {
                   onChange={(e) => setAmount(+e.target.value)}
                 />
               </div>
-              <button className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white hover:bg-green-700 duration-150 ease-linear">
+              <button
+                onClick={handleAmount}
+                className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white hover:bg-green-700 duration-150 ease-linear"
+              >
                 Initiate Transfer
               </button>
             </div>

@@ -22,7 +22,7 @@ export const Users = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        throw new Error("JWT token is not found");
+        toast.error("User is not authorized!");
       }
       const response = await axios.get<{ data: User[] }>(
         "http://localhost:7001/api/v1/users?filter=" + filter,
