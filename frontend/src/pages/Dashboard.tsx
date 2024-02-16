@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Dashboard = () => {
-  const [balance, setBalance] = useState<number | null>();
+  const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
     getUserBalanceApi();
