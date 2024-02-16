@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
-import Balance from "../components/Balance";
-import Users from "../components/Users";
 import axios from "axios";
 import { toast } from "react-toastify";
+
+import Balance from "../components/Balance";
+import Users from "../components/Users";
+
+
+interface ValidationError {
+  message: string;
+  errors: Record<string, string[]>;
+}
+
 
 const Dashboard = () => {
   const [balance, setBalance] = useState<number | null>(null);
@@ -18,7 +26,7 @@ const Dashboard = () => {
       return;
     }
     try {
-      const response = await axios.get<{ balance: number }>(
+      const response = await axios.get<{ balance: number; message: string }>(
         "http://localhost:7001/api/v1/account/balance",
         {
           headers: {
@@ -29,6 +37,11 @@ const Dashboard = () => {
       const data = response.data;
       setBalance(data.balance);
     } catch (error) {
+      if (axios.isAxiosError<ValidationError>(error)) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        }
+      }
       console.error(error);
     }
   }
