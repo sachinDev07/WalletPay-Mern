@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import zod from "zod";
+import zod, { ZodEffects } from "zod";
 import { JwtPayload } from "jsonwebtoken";
 
 import User from "../model/user";
@@ -22,6 +22,16 @@ const userSignUpSchema = zod.object({
 
 const userSignInSchema = zod.object({
   email: zod.string().email({ message: "Invalid email address" }),
+  password: zod
+    .string()
+    .min(5, { message: "Must be 5 or more characters long" }),
+});
+
+const userUpdateSchema = zod.object({
+  firstname: zod
+    .string()
+    .min(3, { message: "Must be 3 or more characters long" }),
+  lastname: zod.string(),
   password: zod
     .string()
     .min(5, { message: "Must be 5 or more characters long" }),
@@ -110,7 +120,7 @@ async function isAuthenticated(token: string) {
 
 async function updateUserInformation(req: CustomRequest, res: Response) {
   try {
-    const { success } = userSignUpSchema.safeParse(req.body);
+    const { success } = userUpdateSchema.safeParse(req.body);
     if (!success) {
       return res.status(411).json({ message: "Error while updating the user" });
     }
@@ -127,7 +137,7 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
         },
       },
       { new: true },
-    ).select("-email");
+    ).select("-password");
 
     return res
       .status(200)
@@ -149,8 +159,6 @@ async function getUsers(req: Request, res: Response) {
   try {
     const filter = req.query.filter || "";
 
-    console.log("filter " + filter);
-
     const users = await User.find({
       $or: [
         {
@@ -168,10 +176,8 @@ async function getUsers(req: Request, res: Response) {
       ],
     }).select("-password");
 
-    console.log("users: " + users.length);
-
     if (users.length === 0) {
-      return res.status(404).json({ error: "No user found!" });
+      return res.status(404).json({ message: "No user found!" });
     }
 
     return res

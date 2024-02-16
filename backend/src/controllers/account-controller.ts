@@ -27,7 +27,7 @@ async function handleTransfer(req: CustomRequest, res: Response) {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const { amount, to } = req.body;
+    const { amount, to }: { amount: number; to: string } = req.body;
 
     const account = await Account.findOne({ userId: req.user?._id }).session(
       session,
