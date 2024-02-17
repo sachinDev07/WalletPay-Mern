@@ -86,7 +86,7 @@ async function signin(req: Request, res: Response) {
     const jwt = Auth.createToken({ id: user._id, email: user.email });
     return res
       .status(200)
-      .json({ token: jwt, message: "Successfully sign in the user" });
+      .json({ token: jwt, firstname: user.firstname, lastname: user.lastname, email: user.email, message: "Successfully sign in the user" });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });
