@@ -8,6 +8,9 @@ type ResponseType = {
 };
 
 interface ValidationError {
+  error: {
+    message: string;
+  }[];
   message: string;
   errors: Record<string, string[]>;
 }
@@ -24,7 +27,7 @@ export const SendMoney = () => {
   const handleAmount = async () => {
     try {
       if (!token) {
-        toast.error("User is not authenticated.");
+        toast.error("User is not authorized.");
         return;
       }
       const response = await axios.post<ResponseType>(
@@ -42,7 +45,12 @@ export const SendMoney = () => {
     } catch (error) {
       if (axios.isAxiosError<ValidationError>(error)) {
         if (error.response) {
-          toast.info(error.response.data.message);
+          if (error.response.data) {
+            toast.info(error.response.data.message);
+          }
+          if (error.response.data.error) {
+            toast.error(error.response.data.error[0].message);
+          }
         }
       } else {
         toast.error("An error occurred");
@@ -77,6 +85,7 @@ export const SendMoney = () => {
                 </label>
                 <input
                   type="number"
+                  defaultValue={0}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   id="amount"
                   placeholder="Enter amount"
