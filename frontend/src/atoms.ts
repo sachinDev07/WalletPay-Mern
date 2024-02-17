@@ -2,5 +2,5 @@ import { atom } from "recoil";
 
 export const profileAtom = atom({
   key: "profile",
-  default: "Z",
+  default: localStorage.getItem("usernameFirstLetter") || "Z",
 });

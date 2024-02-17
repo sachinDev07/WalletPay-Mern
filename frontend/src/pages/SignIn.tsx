@@ -6,8 +6,6 @@ import { toast } from "react-toastify";
 import BottomWarning from "../components/BottomWarning";
 import Heading from "../components/Heading";
 import SubHeading from "../components/SubHeading";
-import { useSetRecoilState } from "recoil";
-import { profileAtom } from "../atoms";
 
 type FormData = {
   email: string;
@@ -28,7 +26,6 @@ interface ValidationError {
 }
 
 const SignIn = () => {
-  const setUsernameFirstLetter = useSetRecoilState(profileAtom);
   const navigate = useNavigate();
   const {
     register,
@@ -45,7 +42,7 @@ const SignIn = () => {
       const responseData = response.data;
       const token = responseData.token;
       localStorage.setItem("token", token);
-      setUsernameFirstLetter(responseData.firstname.charAt(0))
+      localStorage.setItem("usernameFirstLetter", responseData.firstname.charAt(0));
       toast.success(responseData.message);
       navigate("/dashboard");
     } catch (error) {
