@@ -1,8 +1,15 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { profileAtom } from "../atoms";
+import { useEffect } from "react";
 
 const Header = () => {
   const firstLetterOfUsername = useRecoilValue(profileAtom);
+  const setFirstLetterOfUsername = useSetRecoilState(profileAtom);
+  useEffect(() => {
+    setFirstLetterOfUsername(
+      localStorage.getItem("usernameFirstLetter") as string,
+    );
+  }, []);
   return (
     <header className="shadow h-14 px-6 flex justify-between items-center">
       <div className="text-xl font-bold">WalletPay</div>
