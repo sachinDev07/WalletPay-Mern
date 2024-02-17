@@ -80,13 +80,14 @@ async function signin(req: Request, res: Response) {
 
     const passwordMatch = user.isPasswordCorrect(validatedUserData.password);
     if (!passwordMatch) {
-      return res.status(400).json({ error: "Invalid password" });
+      return res.status(400).json({ message: "Invalid password" });
     }
 
     const jwt = Auth.createToken({ id: user._id, email: user.email });
     return res
       .status(200)
-      .json({ token: jwt, firstname: user.firstname, lastname: user.lastname, email: user.email, message: "Successfully sign in the user" });
+      .json({ token: jwt, firstname: user.firstname, lastname: user.lastname, email: user.email,
+         message: "Successfully sign in the user" });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });

@@ -8,16 +8,16 @@ async function getUserBalance(req: CustomRequest, res: Response) {
   try {
     const account = await Account.findOne({ userId: req.user?._id });
     if (!account) {
-      res.status(404).send({ error: "No account found" });
+      return res.status(404).send({ message: "No account found" });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       balance: account?.balance,
       message: "Successfully completed the request",
     });
   } catch (error: any) {
     console.error(error);
-    res.status(500).send({
+    return res.status(500).send({
       message: "Something went wrong while fetching user account balance",
     });
   }
@@ -35,17 +35,17 @@ async function handleTransfer(req: CustomRequest, res: Response) {
 
     if (!account) {
       await session.abortTransaction();
-      res.status(400).send({ message: "Invalid account" });
+      return res.status(400).send({ message: "Invalid account" });
     }
     if (account !== null && account.balance < amount) {
       await session.abortTransaction();
-      res.status(400).json({ message: "Insufficient balance" });
+      return res.status(400).json({ message: "Insufficient balance" });
     }
 
     const toAccount = await Account.findOne({ userId: to }).session(session);
     if (!toAccount) {
       await session.abortTransaction();
-      res.status(404).json({ message: "Invalid account" });
+      return res.status(404).json({ message: "Invalid account" });
     }
 
     // perform the transfer
@@ -60,10 +60,10 @@ async function handleTransfer(req: CustomRequest, res: Response) {
 
     // commit the transaction
     await session.commitTransaction();
-    res.status(200).json({ message: "Amount transfer successfully" });
+    return res.status(200).json({ message: "Amount transfer successfully" });
   } catch (error: any) {
     console.error(error);
-    res
+    return res
       .status(500)
       .json({ error: "Something went wrong while transffering the amount" });
   }
