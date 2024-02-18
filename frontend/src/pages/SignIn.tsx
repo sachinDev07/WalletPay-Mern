@@ -42,7 +42,7 @@ const SignIn = () => {
       const responseData = response.data;
       const token = responseData.token;
       localStorage.setItem("token", token);
-      localStorage.setItem("usernameFirstLetter", responseData.firstname.charAt(0));
+      localStorage.setItem("username", responseData.firstname);
       toast.success(responseData.message);
       navigate("/dashboard");
     } catch (error) {

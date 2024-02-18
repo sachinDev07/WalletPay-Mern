@@ -3,11 +3,11 @@ import { profileAtom } from "../atoms";
 import { useEffect } from "react";
 
 const Header = () => {
-  const firstLetterOfUsername = useRecoilValue(profileAtom);
-  const setFirstLetterOfUsername = useSetRecoilState(profileAtom);
+  const username = useRecoilValue(profileAtom);
+  const setUsername = useSetRecoilState(profileAtom);
   useEffect(() => {
-    setFirstLetterOfUsername(
-      localStorage.getItem("usernameFirstLetter") as string,
+    setUsername(
+      localStorage.getItem("username") as string,
     );
   }, []);
   return (
@@ -16,7 +16,7 @@ const Header = () => {
       <div className="flex justify-between items-center space-x-4">
         <div className="font-bold">Hello</div>
         <div className="rounded-full h-10 w-10 bg-slate-200 text-xl font-bold flex justify-center items-center cursor-pointer">
-          {firstLetterOfUsername.toUpperCase()}
+        {username.charAt(0).toUpperCase()}  
         </div>
       </div>
     </header>
