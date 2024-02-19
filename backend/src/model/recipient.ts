@@ -15,6 +15,15 @@ const recepientSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true,
+    minLength: 3,
+    maxLength: 30,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
