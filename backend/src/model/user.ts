@@ -7,28 +7,35 @@ export interface UserSchemaType extends Document {
   lastname: string;
   email: string;
   password: string;
+  refreshToken: string;
   isPasswordCorrect(plainText: string): boolean;
 }
 
-const userSchema = new mongoose.Schema({
-  firstname: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    refreshToken: {
+      type: String,
+    },
   },
-  lastname: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  { timestamps: true },
+);
 
 userSchema.pre("save", function encrypt(next) {
   if (this.isModified("password")) {

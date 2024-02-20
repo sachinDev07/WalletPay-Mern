@@ -9,10 +9,20 @@ interface JwtPayload {
   _id: string;
 }
 
-function createToken(input: InputType) {
+function createAccessToken(input: InputType) {
   try {
-    return jwt.sign(input, process.env.JWT_SECRET_KEY as string, {
-      expiresIn: process.env.JWT_EXPIRY as string,
+    return jwt.sign(input, process.env.ACCESS_SECRET_TOKEN as string, {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY as string,
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+function createRefreshToken(input: InputType) {
+  try {
+    return jwt.sign(input, process.env.REFRESH_SECRET_TOKEN as string, {
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY as string,
     });
   } catch (error) {
     throw error;
@@ -21,11 +31,14 @@ function createToken(input: InputType) {
 
 function verifyToken(token: string): JwtPayload {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET_KEY as string) as JwtPayload
+    return jwt.verify(
+      token,
+      process.env.JWT_SECRET_KEY as string,
+    ) as JwtPayload;
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
 
-export { createToken, verifyToken };
+export { createAccessToken, createRefreshToken, verifyToken };
