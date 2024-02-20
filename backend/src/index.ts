@@ -1,6 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import connectDB from "./db/db";
 import userRoutes from "./routes/user-routes";
@@ -11,10 +12,10 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors())
+app.use(cors());
+app.use(cookieParser());
 
-
-app.use("/api/v1", infoRoutes)
+app.use("/api/v1", infoRoutes);
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", accountRoutes);
 

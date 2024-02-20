@@ -33,7 +33,7 @@ function verifyToken(token: string): JwtPayload {
   try {
     return jwt.verify(
       token,
-      process.env.JWT_SECRET_KEY as string,
+      process.env.ACCESS_SECRET_TOKEN as string,
     ) as JwtPayload;
   } catch (error) {
     console.error(error);
