@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import zod, { ZodEffects } from "zod";
+import zod from "zod";
 import { JwtPayload } from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 import User from "../model/user";
 import * as Auth from "../utils/common/auth";
@@ -151,17 +152,24 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
 
     const { firstname, lastname, password } = req.body;
 
+    if (password) {
+      req.body.password = bcrypt.hashSync(
+        password,
+        parseInt(process.env.SALT_ROUNDS as string),
+      );
+    }
+
     const user = await User.findByIdAndUpdate(
       req.user?._id,
       {
         $set: {
           firstname,
           lastname,
-          password,
+          password: req.body.password,
         },
       },
       { new: true },
-    ).select("-password");
+    ).select("-password -refreshToken");
 
     return res
       .status(200)
