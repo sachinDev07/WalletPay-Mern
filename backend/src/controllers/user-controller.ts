@@ -83,11 +83,34 @@ async function signin(req: Request, res: Response) {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    const jwt = Auth.createToken({ id: user._id, email: user.email });
+    const accessToken = Auth.createAccessToken({
+      id: user._id,
+      email: user.email,
+    });
+    const refreshToken = Auth.createRefreshToken({
+      id: user._id,
+      email: user.email,
+    });
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    };
+
     return res
       .status(200)
-      .json({ token: jwt, firstname: user.firstname, lastname: user.lastname, email: user.email,
-         message: "Successfully sign in the user" });
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json({
+        firstname: user?.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        message: "User logged In Successfully",
+      });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });
