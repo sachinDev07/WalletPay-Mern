@@ -223,4 +223,39 @@ async function getUsers(req: Request, res: Response) {
   }
 }
 
-export { signup, signin, isAuthenticated, updateUserInformation, getUsers };
+async function logOutUser(req: CustomRequest, res: Response) {
+  try {
+    await User.findByIdAndUpdate(
+      req.user!._id,
+      {
+        $set: {
+          refreshToken: undefined,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    };
+
+    return res
+      .status(200)
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .json({ message: "User logged out" });
+  } catch (error) {}
+}
+
+export {
+  signup,
+  signin,
+  isAuthenticated,
+  updateUserInformation,
+  getUsers,
+  logOutUser,
+};

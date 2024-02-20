@@ -13,4 +13,6 @@ router.put("/users/update", checkAuth, UserController.updateUserInformation);
 
 router.get("/users", checkAuth, UserController.getUsers);
 
+router.post("/users/logout", checkAuth, UserController.logOutUser);
+
 export default router;
