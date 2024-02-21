@@ -8,6 +8,7 @@ import * as Auth from "../utils/common/auth";
 import { CustomRequest } from "../custome";
 import Account from "../model/account";
 
+
 const userSignUpSchema = zod.object({
   firstname: zod
     .string()
@@ -124,7 +125,7 @@ async function signin(req: Request, res: Response) {
 
 async function isAuthenticated(token: string) {
   try {
-    const response: JwtPayload = Auth.verifyToken(token);
+    const response: JwtPayload = Auth.verifyAccessToken(token);
     const user = await User.findOne({ _id: response.id });
     if (!user) {
       return new Error("No user found");
@@ -251,6 +252,56 @@ async function logOutUser(req: CustomRequest, res: Response) {
   } catch (error) {}
 }
 
+async function generateRefreshToken(req: CustomRequest, res: Response) {
+  try {
+    const incomingRefreshToken = req.cookies.refreshToken;
+    if (!incomingRefreshToken) {
+      return res.status(401).json({ message: "Unauthorized request" });
+    }
+
+    const decodedToken = Auth.verifyRefreshToken(incomingRefreshToken);
+
+    const user = await User.findById(decodedToken?.id);
+    if (!user) {
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
+
+    if (incomingRefreshToken !== user.refreshToken) {
+      return res
+        .status(401)
+        .json({ message: "Refresh token is expired or used" });
+    }
+
+    const accessToken = Auth.createAccessToken({
+      id: user._id,
+      email: user.email,
+    });
+    const refreshToken = Auth.createRefreshToken({
+      id: user._id,
+      email: user.email,
+    });
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    };
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json({
+        firstname: user?.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        message: "Access token refreshed",
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export {
   signup,
   signin,
@@ -258,4 +309,5 @@ export {
   updateUserInformation,
   getUsers,
   logOutUser,
+  generateRefreshToken,
 };

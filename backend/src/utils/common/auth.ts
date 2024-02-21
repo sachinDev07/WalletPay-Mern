@@ -6,7 +6,7 @@ type InputType = {
 };
 
 interface JwtPayload {
-  _id: string;
+  id: string;
 }
 
 function createAccessToken(input: InputType) {
@@ -29,7 +29,7 @@ function createRefreshToken(input: InputType) {
   }
 }
 
-function verifyToken(token: string): JwtPayload {
+function verifyAccessToken(token: string): JwtPayload {
   try {
     return jwt.verify(
       token,
@@ -41,4 +41,21 @@ function verifyToken(token: string): JwtPayload {
   }
 }
 
-export { createAccessToken, createRefreshToken, verifyToken };
+function verifyRefreshToken(token: string): JwtPayload {
+  try {
+    return jwt.verify(
+      token,
+      process.env.REFRESH_SECRET_TOKEN as string,
+    ) as JwtPayload;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export {
+  createAccessToken,
+  createRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+};

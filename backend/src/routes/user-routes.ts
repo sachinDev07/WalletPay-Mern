@@ -15,4 +15,6 @@ router.get("/users", checkAuth, UserController.getUsers);
 
 router.post("/users/logout", checkAuth, UserController.logOutUser);
 
+router.post("/users/refreshToken", UserController.generateRefreshToken);
+
 export default router;
