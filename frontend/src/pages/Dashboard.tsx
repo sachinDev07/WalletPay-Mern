@@ -47,8 +47,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="px-12">
-      <div className="m-8">
+    <div className="md:px-44">
+      <div className="px-4 md:px-0 mt-4">
         <Balance value={balance} />
         <Users />
       </div>

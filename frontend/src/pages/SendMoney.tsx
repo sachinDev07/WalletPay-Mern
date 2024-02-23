@@ -73,7 +73,7 @@ export const SendMoney = () => {
                   {name?.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <h3 className="text-3xl font-semibold">{name}</h3>
+              <h3 className="text-3xl font-semibold">{name.charAt(0).toUpperCase() + name.substring(1)}</h3>
             </div>
             <div className="space-y-6 mt-4">
               <div className="space-y-2">
