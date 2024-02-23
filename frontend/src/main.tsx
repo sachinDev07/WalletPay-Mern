@@ -14,20 +14,20 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
-        element: <SignUp />,
-      },
-      {
-        path: "/signin",
-        element: <SignIn />,
-      },
-      {
         path: "/dashboard",
         element: <Dashboard />,
       },
       {
         path: "/send",
         element: <SendMoney />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      {
+        path: "/",
+        element: <SignIn />,
       },
     ],
   },

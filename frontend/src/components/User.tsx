@@ -20,7 +20,7 @@ const User = ({ id, firstChar, firstName, lastName }: UserDetails) => {
         <div className="flex">
           <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
             <div className="flex flex-col justify-center h-full text-xl font-bold">
-              {firstChar}
+              {firstChar.toUpperCase()}
             </div>
           </div>
           <div className="flex flex-col justify-center h-full">
