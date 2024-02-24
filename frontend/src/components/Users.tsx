@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import User from "./User";
-import axios from "axios";
 import { toast } from "react-toastify";
+import axios from "axios";
+
+import User from "./User";
+import SearchBar from "./SearchBar";
+import UserSkeleton from "./Skeleton/UserSkeleton";
+import SearchBarSkeleton from "./Skeleton/SearchBarSkeleton";
 
 interface User {
   _id: string;
@@ -18,6 +22,8 @@ interface ValidationError {
 export const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+
   const getUsers = async (filter: string) => {
     try {
       const token = localStorage.getItem("token");
@@ -45,6 +51,8 @@ export const Users = () => {
         toast.error("An error occurred");
       }
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,17 +60,21 @@ export const Users = () => {
     getUsers(filter);
   }, [filter]);
 
+  if (loading) {
+    return (
+      <>
+        <SearchBarSkeleton />
+        {Array.from({ length: 5 }).map((_, index) => (
+          <UserSkeleton key={index} />
+        ))}
+      </>
+    );
+  }
+
   return (
     <>
       <div className="font-bold mt-6 text-lg">Users</div>
-      <div className="my-2">
-        <input
-          onChange={(e) => setFilter(e.target.value)}
-          type="text"
-          placeholder="Search users..."
-          className="w-full px-2 py-1 border rounded border-slate-400"
-        ></input>
-      </div>
+      <SearchBar setFilter={setFilter} />
       <div>
         {users?.map((user) => (
           <User
