@@ -57,7 +57,11 @@ export const Users = () => {
   };
 
   useEffect(() => {
-    getUsers(filter);
+    const timeOutId = setTimeout(() => {
+      getUsers(filter);
+    }, 400);
+
+    return () => clearTimeout(timeOutId);
   }, [filter]);
 
   if (loading) {
