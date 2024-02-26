@@ -7,6 +7,8 @@ import SearchBar from "./SearchBar";
 import UserSkeleton from "./Skeleton/UserSkeleton";
 import SearchBarSkeleton from "./Skeleton/SearchBarSkeleton";
 import Pagination from "./Pagination";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { getTotalPages } from "../redux/paginationSlice";
 
 interface User {
   _id: string;
@@ -24,8 +26,9 @@ export const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  
+  const page = useAppSelector((store) => store.pagination.page);
+  const dispatch = useAppDispatch();
 
   const getUsers = async (filter: string) => {
     try {
@@ -45,7 +48,7 @@ export const Users = () => {
       const data = response.data;
       setUsers(data.data);
       const totalUsers = Math.ceil(data.totalUsers / 5);
-      setTotalPages(totalUsers);
+      dispatch(getTotalPages(totalUsers));
     } catch (error) {
       if (axios.isAxiosError<ValidationError>(error)) {
         if (error.code === "ERR_BAD_REQUEST") {
@@ -61,14 +64,6 @@ export const Users = () => {
       setLoading(false);
     }
   };
-
-  function selectPageHandler(selectedPage: number) {
-    if (selectedPage < 1 || selectedPage > totalPages) {
-      return;
-    }
-
-    setPage(selectedPage);
-  }
 
   useEffect(() => {
     const timeOutId = setTimeout(() => getUsers(filter), 200);
@@ -104,13 +99,7 @@ export const Users = () => {
           ))}
       </div>
 
-      {users.length > 0 && (
-        <Pagination
-          onClick={selectPageHandler}
-          totalPages={totalPages}
-          page={page}
-        />
-      )}
+      {users.length > 0 && <Pagination />}
     </>
   );
 };

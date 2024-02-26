@@ -62,7 +62,7 @@ export const SendMoney = () => {
   return (
     <div className="flex justify-center h-[calc(100vh-3.5rem)] bg-gray-100">
       <div className="h-full flex flex-col justify-center">
-        <div className="border h-min text-card-foreground max-w-md p-4 space-y-8 w-96 bg-white shadow-lg rounded-lg">
+        <div className="border h-min text-card-foreground p-4 space-y-8  min-w-[300px] md:min-w-96 bg-white shadow-lg rounded-lg">
           <div className="flex flex-col space-y-1.5 px-6 pt-6">
             <h2 className="text-3xl font-bold text-center">Send Money</h2>
           </div>
@@ -73,7 +73,9 @@ export const SendMoney = () => {
                   {name?.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <h3 className="text-3xl font-semibold">{name.charAt(0).toUpperCase() + name.substring(1)}</h3>
+              <h3 className="text-3xl font-semibold">
+                {name.charAt(0).toUpperCase() + name.substring(1)}
+              </h3>
             </div>
             <div className="space-y-6 mt-4">
               <div className="space-y-2">
