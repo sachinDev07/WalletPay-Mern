@@ -6,6 +6,7 @@ import User from "./User";
 import SearchBar from "./SearchBar";
 import UserSkeleton from "./Skeleton/UserSkeleton";
 import SearchBarSkeleton from "./Skeleton/SearchBarSkeleton";
+import Pagination from "./Pagination";
 
 interface User {
   _id: string;
@@ -23,6 +24,8 @@ export const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   const getUsers = async (filter: string) => {
     try {
@@ -30,8 +33,9 @@ export const Users = () => {
       if (!token) {
         toast.error("User is not authorized!");
       }
-      const response = await axios.get<{ data: User[] }>(
-        "http://localhost:7001/api/v1/users?filter=" + filter,
+      const response = await axios.get<{ totalUsers: number; data: User[] }>(
+        `http://localhost:7001/api/v1/users?limit=5&page=${page}&filter=` +
+          filter,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -40,6 +44,8 @@ export const Users = () => {
       );
       const data = response.data;
       setUsers(data.data);
+      const totalUsers = Math.ceil(data.totalUsers / 5);
+      setTotalPages(totalUsers);
     } catch (error) {
       if (axios.isAxiosError<ValidationError>(error)) {
         if (error.code === "ERR_BAD_REQUEST") {
@@ -56,13 +62,19 @@ export const Users = () => {
     }
   };
 
+  function selectPageHandler(selectedPage: number) {
+    if (selectedPage < 1 || selectedPage > totalPages) {
+      return;
+    }
+
+    setPage(selectedPage);
+  }
+
   useEffect(() => {
-    const timeOutId = setTimeout(() => {
-      getUsers(filter);
-    }, 400);
+    const timeOutId = setTimeout(() => getUsers(filter), 200);
 
     return () => clearTimeout(timeOutId);
-  }, [filter]);
+  }, [filter, page]);
 
   if (loading) {
     return (
@@ -80,16 +92,25 @@ export const Users = () => {
       <div className="font-bold mt-6 text-lg">Users</div>
       <SearchBar setFilter={setFilter} />
       <div>
-        {users?.map((user) => (
-          <User
-            key={user._id}
-            id={user._id}
-            firstChar={user.firstname.charAt(0)}
-            firstName={user.firstname}
-            lastName={user.lastname}
-          />
-        ))}
+        {users.length > 0 &&
+          users?.map((user) => (
+            <User
+              key={user._id}
+              id={user._id}
+              firstChar={user.firstname.charAt(0)}
+              firstName={user.firstname}
+              lastName={user.lastname}
+            />
+          ))}
       </div>
+
+      {users.length > 0 && (
+        <Pagination
+          onClick={selectPageHandler}
+          totalPages={totalPages}
+          page={page}
+        />
+      )}
     </>
   );
 };

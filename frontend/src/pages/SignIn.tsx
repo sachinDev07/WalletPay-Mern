@@ -114,7 +114,7 @@ const SignIn = () => {
           <BottomWarning
             label={"Don't have an account?"}
             bottomText={"Sign up"}
-            to={"/"}
+            to={"/signup"}
           />
         </div>
       </div>

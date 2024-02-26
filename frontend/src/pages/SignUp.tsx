@@ -40,7 +40,7 @@ const SignUp = () => {
       );
       const responseData = response.data;
       toast.success(responseData.message);
-      navigate("/signin");
+      navigate("/");
     } catch (error) {
       if (axios.isAxiosError<ValidationError>(error)) {
         if (error.response) {
@@ -138,7 +138,7 @@ const SignUp = () => {
           <BottomWarning
             label={"Already have an account?"}
             bottomText={"Sign in"}
-            to={"/signin"}
+            to={"/"}
           />
         </div>
       </div>
