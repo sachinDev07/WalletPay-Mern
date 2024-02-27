@@ -14,6 +14,7 @@ type FormData = {
 
 interface UserDetails {
   token: string;
+  id: string;
   firstname: string;
   lastname: string;
   email: string;
@@ -42,6 +43,7 @@ const SignIn = () => {
       const responseData = response.data;
       const token = responseData.token;
       localStorage.setItem("token", token);
+      localStorage.setItem("id", responseData.id);
       localStorage.setItem("username", responseData.firstname);
       toast.success(responseData.message);
       navigate("/dashboard");

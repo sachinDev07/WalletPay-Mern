@@ -26,18 +26,19 @@ export const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  
+
   const page = useAppSelector((store) => store.pagination.page);
   const dispatch = useAppDispatch();
 
   const getUsers = async (filter: string) => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
+      const userIdToExclude = localStorage.getItem("id");
+      if (!token || !userIdToExclude) {
         toast.error("User is not authorized!");
       }
       const response = await axios.get<{ totalUsers: number; data: User[] }>(
-        `http://localhost:7001/api/v1/users?limit=5&page=${page}&filter=` +
+        `http://localhost:7001/api/v1/users?userIdToExclude=${userIdToExclude}&limit=5&page=${page}&filter=` +
           filter,
         {
           headers: {
@@ -47,8 +48,8 @@ export const Users = () => {
       );
       const data = response.data;
       setUsers(data.data);
-      const totalUsers = Math.ceil(data.totalUsers / 5);
-      dispatch(getTotalPages(totalUsers));
+      const totalNoOfPages = Math.ceil(data.totalUsers / 5);
+      dispatch(getTotalPages(totalNoOfPages));
     } catch (error) {
       if (axios.isAxiosError<ValidationError>(error)) {
         if (error.code === "ERR_BAD_REQUEST") {
@@ -66,7 +67,7 @@ export const Users = () => {
   };
 
   useEffect(() => {
-    const timeOutId = setTimeout(() => getUsers(filter), 200);
+    const timeOutId = setTimeout(() => getUsers(filter), 400);
 
     return () => clearTimeout(timeOutId);
   }, [filter, page]);
@@ -99,7 +100,7 @@ export const Users = () => {
           ))}
       </div>
 
-      {users.length > 0 && <Pagination />}
+      {users.length > 0 && filter === "" && <Pagination />}
     </>
   );
 };

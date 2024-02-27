@@ -13,7 +13,7 @@ const Pagination = () => {
           page > 1
             ? "block cursor-pointer hover:text-slate-900 transition duration-150 ease-in-out"
             : "opacity-0"
-        } text-slate-700 text-sm md:text-xl  mr-2 `}
+        } text-slate-700 text-sm md:text-lg  mr-2 `}
       />
 
       {[...Array.from({ length: totalPages })].map((_, i) => {
