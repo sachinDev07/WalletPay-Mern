@@ -4,9 +4,9 @@ import zod from "zod";
 const transferSchema = zod.object({
   amount: zod
     .number()
-    .min(1, { message: "Amount must be provided!" })
+    .nonnegative({ message: "Amount can't be in negative" })
     .gt(0, { message: "Amount must be greater than zero" })
-    .nonnegative({ message: "Amount must be a non-negative number!" }),
+    .min(1, { message: "Amount must be provided!" }),
   to: zod.string(),
 });
 

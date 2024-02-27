@@ -8,7 +8,6 @@ import * as Auth from "../utils/common/auth";
 import { CustomRequest } from "../custome";
 import Account from "../model/account";
 
-
 const userSignUpSchema = zod.object({
   firstname: zod
     .string()
@@ -88,6 +87,7 @@ async function signin(req: Request, res: Response) {
     const jwt = Auth.createToken({ id: user._id, email: user.email });
     return res.status(200).json({
       token: jwt,
+      id: user._id,
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
@@ -171,20 +171,41 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
 async function getUsers(req: Request, res: Response) {
   try {
     const filter = req.query.filter || "";
+    const page: number =
+      req.query.page === undefined ? 1 : +req.query.page || 1;
+    const limit: number =
+      req.query.limit === undefined ? 5 : +req.query?.limit || 5;
+
+    const userIdToExclude = req.query.userIdToExclude;
+
+    let startIndex = 0;
+    let endIndex = 5;
+
+    if (filter === "") {
+      startIndex = (page - 1) * limit;
+      endIndex = page * limit;
+    }
 
     const users = await User.find({
-      $or: [
+      $and: [
         {
-          firstname: {
-            $regex: filter,
-            $options: "i",
-          },
+          _id: { $ne: userIdToExclude },
         },
         {
-          lastname: {
-            $regex: filter,
-            $options: "i",
-          },
+          $or: [
+            {
+              firstname: {
+                $regex: filter,
+                $options: "i",
+              },
+            },
+            {
+              lastname: {
+                $regex: filter,
+                $options: "i",
+              },
+            },
+          ],
         },
       ],
     }).select("-password");
@@ -193,9 +214,13 @@ async function getUsers(req: Request, res: Response) {
       return res.status(404).json({ message: "No user found!" });
     }
 
-    return res
-      .status(200)
-      .json({ data: users, message: "User found successfully!" });
+    const usersData = users.slice(startIndex, endIndex);
+
+    return res.status(200).json({
+      totalUsers: users.length,
+      data: usersData,
+      message: "User found successfully!",
+    });
   } catch (error) {
     console.error(error);
     return res
@@ -231,7 +256,6 @@ async function logOutUser(req: CustomRequest, res: Response) {
       .json({ message: "User logged out" });
   } catch (error) {}
 }
-
 
 export {
   signup,
