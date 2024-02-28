@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import zod from "zod";
-import { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 import User from "../model/user";
@@ -84,15 +84,45 @@ async function signin(req: Request, res: Response) {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    const jwt = Auth.createToken({ id: user._id, email: user.email });
-    return res.status(200).json({
-      token: jwt,
-      id: user._id,
+    // const jwt = Auth.createToken({ id: user._id, email: user.email });
+
+    // const jwt = Auth.createToken({ id: user._id, email: user.email });
+
+    const accessToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY as string },
+    );
+    const refreshToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.REFRESH_TOKEN_SECRET as string,
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRY as string },
+    );
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+
+    return res.status(200).cookie("refreshToken", refreshToken, options).json({
+      accessToken: accessToken,
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
-      message: "Successfully sign in the user",
+      message: "User logged In Successfully",
     });
+
+    // return res.status(200).json({
+    //   token: jwt,
+    //   id: user._id,
+    //   firstname: user.firstname,
+    //   lastname: user.lastname,
+    //   email: user.email,
+    //   message: "Successfully sign in the user",
+    // });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });

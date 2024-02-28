@@ -7,6 +7,7 @@ import connectDB from "./db/db";
 import userRoutes from "./routes/user-routes";
 import infoRoutes from "./routes/info-routes";
 import accountRoutes from "./routes/account-routes";
+import refreshTokenRoutes from "./routes/refreshToken-routes";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
+app.use("/api/v1", refreshTokenRoutes);
 app.use("/api/v1", infoRoutes);
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", accountRoutes);

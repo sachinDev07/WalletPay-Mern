@@ -5,8 +5,9 @@ type InputType = {
   email: string;
 };
 
-interface JwtPayload {
+export interface JwtPayload {
   id: string;
+  email: string;
 }
 
 function createToken(input: InputType) {
