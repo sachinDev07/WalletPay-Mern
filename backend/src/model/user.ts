@@ -3,12 +3,18 @@ import bcrypt from "bcryptjs";
 
 export interface UserSchemaType extends Document {
   _id: string;
+  role: string;
   firstname: string;
   lastname: string;
   email: string;
   password: string;
   refreshToken: string;
   isPasswordCorrect(plainText: string): boolean;
+}
+
+export enum Role {
+  ADMIN = "admin",
+  USER = "user",
 }
 
 const userSchema = new mongoose.Schema({
@@ -31,6 +37,12 @@ const userSchema = new mongoose.Schema({
   },
   refreshToken: {
     type: String,
+  },
+  role: {
+    type: String,
+    required: true,
+    enum: Role,
+    default: Role.USER,
   },
 });
 
