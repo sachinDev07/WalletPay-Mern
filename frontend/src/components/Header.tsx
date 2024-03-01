@@ -16,7 +16,7 @@ const Header = () => {
       <div className="flex justify-between items-center space-x-4">
         <div className="font-bold">Hello</div>
         <div className="rounded-full h-8 w-8 md:h-10 md:w-10 bg-slate-200 text-xl font-bold flex justify-center items-center cursor-pointer">
-        {username.charAt(0).toUpperCase()}  
+        {/* {username?}    */} w
         </div>
       </div>
     </header>

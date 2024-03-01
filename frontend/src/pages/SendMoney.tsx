@@ -22,21 +22,14 @@ export const SendMoney = () => {
   const navigate = useNavigate();
 
   const [amount, setAmount] = useState<number>(0);
-  const [token] = useState<string | null>(localStorage.getItem("token"));
 
   const handleAmount = async () => {
     try {
-      if (!token) {
-        toast.error("User is not authorized.");
-        return;
-      }
       const response = await axios.post<ResponseType>(
         "http://localhost:7001/api/v1/account/transfer",
         { amount, to: id },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       const data = response.data;
@@ -70,11 +63,11 @@ export const SendMoney = () => {
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
                 <span className="text-2xl font-bold text-white">
-                  {name?.charAt(0).toUpperCase()}
+                  {/* {name?.charAt(0).toUpperCase()} */}
                 </span>
               </div>
               <h3 className="text-3xl font-semibold">
-                {name.charAt(0).toUpperCase() + name.substring(1)}
+                {/* {name.charAt(0).toUpperCase() + name.substring(1)} */}
               </h3>
             </div>
             <div className="space-y-6 mt-4">

@@ -5,33 +5,20 @@ import { toast } from "react-toastify";
 import Balance from "../components/Balance";
 import Users from "../components/Users";
 
-
 interface ValidationError {
   message: string;
   errors: Record<string, string[]>;
 }
 
-
 const Dashboard = () => {
   const [balance, setBalance] = useState<number | null>(null);
 
-  useEffect(() => {
-    getUserBalanceApi();
-  }, []);
-
   async function getUserBalanceApi() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.info("User is not authorized!");
-      return;
-    }
     try {
       const response = await axios.get<{ balance: number; message: string }>(
         "http://localhost:7001/api/v1/account/balance",
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       const data = response.data;
@@ -45,6 +32,10 @@ const Dashboard = () => {
       console.error(error);
     }
   }
+
+  useEffect(() => {
+    getUserBalanceApi();
+  }, []);
 
   return (
     <div className="md:px-44">

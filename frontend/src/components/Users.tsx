@@ -32,18 +32,16 @@ export const Users = () => {
 
   const getUsers = async (filter: string) => {
     try {
-      const token = localStorage.getItem("token");
       const userIdToExclude = localStorage.getItem("id");
-      if (!token || !userIdToExclude) {
+      if (!userIdToExclude) {
         toast.error("User is not authorized!");
       }
-      const response = await axios.get<{ totalUsers: number; data: User[] }>(
+
+      const response = await axios.get<{totalUsers: number; data: User[];}>(
         `http://localhost:7001/api/v1/users?userIdToExclude=${userIdToExclude}&limit=5&page=${page}&filter=` +
           filter,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          withCredentials: true,
         },
       );
       const data = response.data;

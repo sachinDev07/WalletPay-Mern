@@ -7,6 +7,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
 import SendMoney from "./pages/SendMoney";
+import RequiredAuth from "./components/RequiredAuth.tsx";
 
 const router = createBrowserRouter([
   {
@@ -14,19 +15,25 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
-      {
-        path: "/send",
-        element: <SendMoney />,
+        // path: "/",
+        element: <RequiredAuth allowedRole="user" />,
+        children: [
+          {
+            path: "/",
+            element: <Dashboard />,
+          },
+          {
+            path: "/send",
+            element: <SendMoney />,
+          },
+        ],
       },
       {
         path: "/signup",
         element: <SignUp />,
       },
       {
-        path: "/",
+        path: "/login",
         element: <SignIn />,
       },
     ],

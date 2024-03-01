@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import BottomWarning from "../components/BottomWarning";
 import Heading from "../components/Heading";
 import SubHeading from "../components/SubHeading";
+import useAuth from "../hooks/useAuth";
 
 type FormData = {
   email: string;
@@ -13,12 +14,13 @@ type FormData = {
 };
 
 interface UserDetails {
-  token: string;
   id: string;
   firstname: string;
   lastname: string;
+  role: string;
   email: string;
   message: string;
+  accessToken: string;
 }
 
 interface ValidationError {
@@ -27,7 +29,10 @@ interface ValidationError {
 }
 
 const SignIn = () => {
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
   const {
     register,
     handleSubmit,
@@ -40,13 +45,14 @@ const SignIn = () => {
         "http://localhost:7001/api/v1/users/signin",
         data,
       );
-      const responseData = response.data;
-      const token = responseData.token;
-      localStorage.setItem("token", token);
-      localStorage.setItem("id", responseData.id);
-      localStorage.setItem("username", responseData.firstname);
-      toast.success(responseData.message);
-      navigate("/dashboard");
+      console.log("response: ", response);
+
+      const { id, firstname, lastname, role, accessToken, message } = response.data;
+
+      setAuth({ id, firstname, lastname, role, accessToken, message });
+      localStorage.setItem("id", id);
+      toast.success(response?.data?.message);
+      navigate(from, { replace: true });
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError<ValidationError>(error)) {
