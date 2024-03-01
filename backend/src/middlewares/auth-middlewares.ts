@@ -9,15 +9,16 @@ async function checkAuth(
   next: NextFunction,
 ) {
   try {
-    const authHeader = req.headers.authorization as string;
+    const refreshToken = req.cookies?.refreshToken;
+    console.log("refresh: ", refreshToken);
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!refreshToken) {
       return res.status(401).json({ error: "JWT Token is missing" });
     }
 
-    const token = authHeader.split(" ")[1];
+    const response = await isAuthenticated(refreshToken);
 
-    const response = await isAuthenticated(token);
+    console.log("res: ", response);
 
     if (response instanceof Error) {
       return res.status(401).json({ error: "Unauthorized!" });
@@ -25,7 +26,7 @@ async function checkAuth(
     req.user = response;
     next();
   } catch (error) {
-    console.error(error);
+    console.error( error);
     res.status(401).json({ error: error });
   }
 }

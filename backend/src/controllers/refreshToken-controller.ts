@@ -37,7 +37,7 @@ async function handleRefreshToken(req: Request, res: Response) {
 
     return res.json({ accessToken: accessToken });
   } catch (error) {
-    console.error("Err: ", error);
+    console.error(error);
   }
 }
 

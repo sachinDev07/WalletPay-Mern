@@ -22,7 +22,7 @@ function createToken(input: InputType) {
 
 function verifyToken(token: string): JwtPayload {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET_KEY as string) as JwtPayload
+    return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET as string) as JwtPayload
   } catch (error) {
     console.error(error);
     throw error;
