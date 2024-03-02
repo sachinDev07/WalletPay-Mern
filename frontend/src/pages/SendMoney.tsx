@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 type ResponseType = {
@@ -34,7 +34,7 @@ export const SendMoney = () => {
       );
       const data = response.data;
       toast.success(data.message);
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       if (axios.isAxiosError<ValidationError>(error)) {
         if (error.response) {
@@ -63,11 +63,11 @@ export const SendMoney = () => {
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
                 <span className="text-2xl font-bold text-white">
-                  {/* {name?.charAt(0).toUpperCase()} */}
+                  {name?.charAt(0).toUpperCase()}
                 </span>
               </div>
               <h3 className="text-3xl font-semibold">
-                {/* {name.charAt(0).toUpperCase() + name.substring(1)} */}
+                {name?.charAt(0).toUpperCase() + name?.substring(1)}
               </h3>
             </div>
             <div className="space-y-6 mt-4">
@@ -93,6 +93,11 @@ export const SendMoney = () => {
               >
                 Initiate Transfer
               </button>
+            </div>
+            <div className="text-center mt-4">
+              <Link to="/" className="hover:font-medium">
+                Go to home
+              </Link>
             </div>
           </div>
         </div>

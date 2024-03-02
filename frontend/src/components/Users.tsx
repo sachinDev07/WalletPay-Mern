@@ -37,7 +37,7 @@ export const Users = () => {
         toast.error("User is not authorized!");
       }
 
-      const response = await axios.get<{totalUsers: number; data: User[];}>(
+      const response = await axios.get<{ totalUsers: number; data: User[] }>(
         `http://localhost:7001/api/v1/users?userIdToExclude=${userIdToExclude}&limit=5&page=${page}&filter=` +
           filter,
         {
@@ -98,7 +98,7 @@ export const Users = () => {
           ))}
       </div>
 
-      {users.length > 0 && filter === "" && <Pagination />}
+      {page > 0 && filter === "" && <Pagination />}
     </>
   );
 };

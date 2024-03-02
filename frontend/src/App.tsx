@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import store from "./redux/store";
 import { Provider } from "react-redux";
@@ -8,11 +8,13 @@ import Toast from "./components/Toast";
 import { AuthProvider } from "./context/AuthProvider";
 
 function App() {
+  const location = useLocation();
+  const displayHeader = !["/signup", "/login"].includes(location.pathname);
   return (
     <AuthProvider>
       <Provider store={store}>
         <RecoilRoot>
-         <Header />
+          {displayHeader && <Header />}
           <Outlet />
           <Toast />
         </RecoilRoot>

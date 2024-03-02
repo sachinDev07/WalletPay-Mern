@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import BottomWarning from "../components/BottomWarning";
@@ -31,8 +31,6 @@ interface ValidationError {
 const SignIn = () => {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location?.state?.from?.pathname || "/";
   const {
     register,
     handleSubmit,
@@ -40,19 +38,28 @@ const SignIn = () => {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
     try {
       const response = await axios.post<UserDetails>(
         "http://localhost:7001/api/v1/users/signin",
         data,
+        options,
       );
-      console.log("response: ", response);
 
-      const { id, firstname, lastname, role, accessToken, message } = response.data;
+      const { id, firstname, lastname, role, accessToken, message } =
+        response.data;
 
       setAuth({ id, firstname, lastname, role, accessToken, message });
       localStorage.setItem("id", id);
+      localStorage.setItem("username", firstname);
       toast.success(response?.data?.message);
-      navigate(from, { replace: true });
+      navigate("/", { replace: true });
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError<ValidationError>(error)) {
