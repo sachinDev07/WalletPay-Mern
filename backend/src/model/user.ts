@@ -17,34 +17,37 @@ export enum Role {
   USER = "user",
 }
 
-const userSchema = new mongoose.Schema({
-  firstname: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    refreshToken: {
+      type: String,
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: Role,
+      default: Role.USER,
+    },
   },
-  lastname: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  refreshToken: {
-    type: String,
-  },
-  role: {
-    type: String,
-    required: true,
-    enum: Role,
-    default: Role.USER,
-  },
-});
+  { timestamps: true },
+);
 
 userSchema.pre("save", function encrypt(next) {
   if (this.isModified("password")) {

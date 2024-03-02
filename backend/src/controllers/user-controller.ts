@@ -98,14 +98,17 @@ async function signin(req: Request, res: Response) {
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-
+    const expires = new Date(Date.now() + 60 * 60 * 1000);
     return res
       .status(200)
-      .cookie("refreshToken", refreshToken, options)
+      .cookie("refreshToken", refreshToken, {
+        path: "/",
+        httpOnly: true,
+        secure: true,
+        expires: expires,
+        sameSite: "none",
+        domain: "localhost",
+      })
       .json({
         accessToken: accessToken,
         id: user._id,
@@ -114,7 +117,7 @@ async function signin(req: Request, res: Response) {
         lastname: user.lastname,
         email: user.email,
         message: "User logged In Successfully",
-    });
+      });
   } catch (error) {
     if (error instanceof zod.ZodError) {
       return res.status(400).json({ error: error.errors });
@@ -230,7 +233,7 @@ async function getUsers(req: Request, res: Response) {
           ],
         },
       ],
-    }).select("-password");
+    }).sort({ createdAt: "desc" }).select("-password");
 
     if (users.length === 0) {
       return res.status(404).json({ message: "No user found!" });
