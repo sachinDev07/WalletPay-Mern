@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 type ResponseType = {
   message: string;
@@ -20,17 +21,15 @@ export const SendMoney = () => {
   const id = searchParams.get("id") as string;
   const name = searchParams.get("name") as string;
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   const [amount, setAmount] = useState<number>(0);
 
   const handleAmount = async () => {
     try {
-      const response = await axios.post<ResponseType>(
-        "http://localhost:7001/api/v1/account/transfer",
+      const response = await axiosPrivate.post<ResponseType>(
+        "/account/transfer",
         { amount, to: id },
-        {
-          withCredentials: true,
-        },
       );
       const data = response.data;
       toast.success(data.message);

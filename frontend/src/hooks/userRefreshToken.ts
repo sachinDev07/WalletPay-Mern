@@ -13,7 +13,7 @@ const useRefreshToken = () => {
       },
       withCredentials: true,
     };
-    const response = await axios.get("http://localhost:7001/api/v1/refresh-token", options);
+    const response = await axios.get("/refresh-token", options);
     setAuth((prev) => {
       console.log(JSON.stringify(prev));
       console.log(response.data.accessToken);

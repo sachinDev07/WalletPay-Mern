@@ -42,7 +42,7 @@ export const Users = () => {
           totalUsers: number;
           data: User[];
         }>(
-          `/api/v1/users?userIdToExclude=${userIdToExclude}&limit=5&page=${page}&filter=` +
+          `/users?userIdToExclude=${userIdToExclude}&limit=5&page=${page}&filter=` +
             filter,
           { signal: controller.signal },
         );
@@ -50,7 +50,7 @@ export const Users = () => {
         isMounted && setUsers(data.data);
         const totalNoOfPages = Math.ceil(data.totalUsers / 5);
         dispatch(getTotalPages(totalNoOfPages));
-      } catch (error:any) {
+      } catch (error: any) {
         if (error?.response && error?.response.status === 404) {
           toast.error("No user found");
         } else {

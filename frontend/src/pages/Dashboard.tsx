@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 import Balance from "../components/Balance";
 import Users from "../components/Users";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface ValidationError {
   message: string;
@@ -12,14 +13,12 @@ interface ValidationError {
 
 const Dashboard = () => {
   const [balance, setBalance] = useState<number | null>(null);
+  const axiosPrivate = useAxiosPrivate();
 
   async function getUserBalanceApi() {
     try {
-      const response = await axios.get<{ balance: number; message: string }>(
-        "http://localhost:7001/api/v1/account/balance",
-        {
-          withCredentials: true,
-        },
+      const response = await axiosPrivate.get<{ balance: number; message: string }>(
+        "/account/balance",
       );
       const data = response.data;
       setBalance(data.balance);
