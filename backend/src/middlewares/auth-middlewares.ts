@@ -9,7 +9,9 @@ async function checkAuth(
   next: NextFunction,
 ) {
   try {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken =
+      (req.cookies?.refreshToken as string) ||
+      (req.header("Authorization")?.replace("Bearer ", "") as string);
 
     if (!refreshToken) {
       return res.status(401).json({ error: "JWT Token is missing" });

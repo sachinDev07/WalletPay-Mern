@@ -233,7 +233,9 @@ async function getUsers(req: Request, res: Response) {
           ],
         },
       ],
-    }).sort({ createdAt: "desc" }).select("-password");
+    })
+      .sort({ createdAt: "desc" })
+      .select("-password");
 
     if (users.length === 0) {
       return res.status(404).json({ message: "No user found!" });
@@ -255,31 +257,37 @@ async function getUsers(req: Request, res: Response) {
 }
 
 async function logOutUser(req: CustomRequest, res: Response) {
+  const refreshToken =
+    (req.cookies?.refreshToken as string) ||
+    (req.header("Authorization")?.replace("Bearer ", "") as string);
   try {
-    await User.findByIdAndUpdate(
-      req.user!._id,
-      {
-        $set: {
-          refreshToken: undefined,
-        },
-      },
-      {
-        new: true,
-      },
-    );
+    if (!refreshToken) {
+      return res.status(204).json({ message: "No content found!" });
+    }
 
-    const options = {
+    const foundUser = await User.findOne({ refreshToken }).exec();
+    if (!foundUser) {
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      });
+      return res.sendStatus(204);
+    }
+
+    foundUser.refreshToken = "";
+
+    await foundUser.save();
+
+    res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
-      sameSite: true,
-    };
-
-    return res
-      .status(200)
-      .clearCookie("accessToken", options)
-      .clearCookie("refreshToken", options)
-      .json({ message: "User logged out" });
-  } catch (error) {}
+      sameSite: "none",
+    });
+    return res.json({ message: "Successfully log out " });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export {

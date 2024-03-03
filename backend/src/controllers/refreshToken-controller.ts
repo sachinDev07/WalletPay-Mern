@@ -35,7 +35,10 @@ async function handleRefreshToken(req: Request, res: Response) {
       { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
     );
 
-    return res.json({ accessToken: accessToken });
+    return res.json({
+      role: foundUser.role, 
+      accessToken: accessToken 
+    });
   } catch (error) {
     console.error(error);
   }

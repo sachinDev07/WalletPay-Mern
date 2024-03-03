@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
+// import axios from "axios";
 
 import User from "./User";
 import SearchBar from "./SearchBar";
@@ -9,6 +9,7 @@ import SearchBarSkeleton from "./Skeleton/SearchBarSkeleton";
 import Pagination from "./Pagination";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getTotalPages } from "../redux/paginationSlice";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface User {
   _id: string;
@@ -17,57 +18,57 @@ interface User {
   email: string;
 }
 
-interface ValidationError {
-  message: string;
-  errors: Record<string, string[]>;
-}
-
 export const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const axiosPrivate = useAxiosPrivate();
 
   const page = useAppSelector((store) => store.pagination.page);
   const dispatch = useAppDispatch();
 
-  const getUsers = async (filter: string) => {
-    try {
-      const userIdToExclude = localStorage.getItem("id");
-      if (!userIdToExclude) {
-        toast.error("User is not authorized!");
-      }
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
 
-      const response = await axios.get<{ totalUsers: number; data: User[] }>(
-        `http://localhost:7001/api/v1/users?userIdToExclude=${userIdToExclude}&limit=5&page=${page}&filter=` +
-          filter,
-        {
-          withCredentials: true,
-        },
-      );
-      const data = response.data;
-      setUsers(data.data);
-      const totalNoOfPages = Math.ceil(data.totalUsers / 5);
-      dispatch(getTotalPages(totalNoOfPages));
-    } catch (error) {
-      if (axios.isAxiosError<ValidationError>(error)) {
-        if (error.code === "ERR_BAD_REQUEST") {
+    const getUsers = async (filter: string) => {
+      try {
+        const userIdToExclude = localStorage.getItem("id");
+        if (!userIdToExclude) {
+          toast.error("User is not authorized!");
+        }
+
+        const response = await axiosPrivate.get<{
+          totalUsers: number;
+          data: User[];
+        }>(
+          `/api/v1/users?userIdToExclude=${userIdToExclude}&limit=5&page=${page}&filter=` +
+            filter,
+          { signal: controller.signal },
+        );
+        const data = response.data;
+        isMounted && setUsers(data.data);
+        const totalNoOfPages = Math.ceil(data.totalUsers / 5);
+        dispatch(getTotalPages(totalNoOfPages));
+      } catch (error:any) {
+        if (error?.response && error?.response.status === 404) {
           toast.error("No user found");
         } else {
           toast.error("An error occurred");
         }
-      } else {
-        toast.error("An error occurred");
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  useEffect(() => {
     const timeOutId = setTimeout(() => getUsers(filter), 400);
 
-    return () => clearTimeout(timeOutId);
+    return () => {
+      clearTimeout(timeOutId);
+      isMounted = false;
+      controller.abort();
+    };
   }, [filter, page]);
 
   if (loading) {
