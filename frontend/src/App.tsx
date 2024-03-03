@@ -1,26 +1,48 @@
-import { Outlet, useLocation } from "react-router-dom";
-import { RecoilRoot } from "recoil";
-import store from "./redux/store";
-import { Provider } from "react-redux";
+import { Route, Routes } from "react-router-dom";
 
-import Header from "./components/Header";
-import Toast from "./components/Toast";
-import { AuthProvider } from "./context/AuthProvider";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Dashboard from "./pages/Dashboard";
+import SendMoney from "./pages/SendMoney";
+import PersistLogin from "./components/PersistentLogin";
+import RequiredAuth from "./components/RequiredAuth";
+import Layout from "./components/Layout";
 
 function App() {
-  const location = useLocation();
-  const displayHeader = !["/signup", "/login"].includes(location.pathname);
   return (
-    <AuthProvider>
-      <Provider store={store}>
-        <RecoilRoot>
-          {displayHeader && <Header />}
-          <Outlet />
-          <Toast />
-        </RecoilRoot>
-      </Provider>
-    </AuthProvider>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        <Route element={<PersistLogin />}>
+          <Route element={<RequiredAuth allowedRole="user" />}>
+            <Route path="/" element={<Dashboard />} />
+          </Route>
+
+          <Route element={<RequiredAuth allowedRole="user" />}>
+            <Route path="/send" element={<SendMoney />} />
+          </Route>
+        </Route>
+      </Route>
+    </Routes>
   );
 }
+
+// function App() {
+//   const location = useLocation();
+//   const displayHeader = !["/signup", "/login"].includes(location.pathname);
+//   return (
+//     <AuthProvider>
+//       <Provider store={store}>
+//         <RecoilRoot>
+//           {displayHeader && <Header />}
+//           <Outlet />
+//           <Toast />
+//         </RecoilRoot>
+//       </Provider>
+//     </AuthProvider>
+//   );
+// }
 
 export default App;
