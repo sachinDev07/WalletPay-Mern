@@ -9,13 +9,15 @@ import {
 export interface AuthContextType {
   auth: {
     id: string;
-    role:string;
+    role: string;
     firstname: string;
     lastname: string;
     accessToken: string;
     message: string;
   };
   setAuth: Dispatch<SetStateAction<AuthContextType["auth"]>>;
+  persist: boolean;
+  setPersist: Dispatch<SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -28,8 +30,9 @@ const AuthContext = createContext<AuthContextType>({
     message: "",
   },
   setAuth: () => {},
+  persist: false,
+  setPersist: () => {},
 });
-
 
 interface AuthContextProviderProps {
   children: ReactNode;
@@ -45,8 +48,13 @@ export const AuthProvider = ({ children }: AuthContextProviderProps) => {
     message: "",
   });
 
+  const persistValue: string | null = localStorage.getItem("persist");
+  const [persist, setPersist] = useState<boolean>(
+    persistValue ? JSON.parse(persistValue) : false,
+  );
+
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, persist, setPersist }}>
       {children}
     </AuthContext.Provider>
   );

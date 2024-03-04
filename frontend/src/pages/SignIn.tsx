@@ -7,6 +7,7 @@ import BottomWarning from "../components/BottomWarning";
 import Heading from "../components/Heading";
 import SubHeading from "../components/SubHeading";
 import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
 
 type FormData = {
   email: string;
@@ -29,7 +30,7 @@ interface ValidationError {
 }
 
 const SignIn = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
   const navigate = useNavigate();
   const {
     register,
@@ -76,6 +77,14 @@ const SignIn = () => {
     }
   };
 
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("persist", persist.toString());
+  }, [persist]);
+
   return (
     <div className="bg-slate-300 h-screen flex justify-center">
       <div className="flex flex-col justify-center">
@@ -115,15 +124,25 @@ const SignIn = () => {
             {errors.password && (
               <span className="text-red-500">{errors.password.message}</span>
             )}
-            <div className="pt-4 text-center">
+            <div className="ml-[1px] space-x-1 flex items-center">
+              <input
+                type="checkbox"
+                id="persist"
+                onChange={togglePersist}
+                checked={persist}
+                className="mt-1"
+              />
               <div>
-                <button
-                  type="submit"
-                  className="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                  Sign In
-                </button>
+                <label htmlFor="persist">Trust this device ?</label>
               </div>
+            </div>
+            <div className="pt-4 text-center">
+              <button
+                type="submit"
+                className="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                Sign In
+              </button>
             </div>
           </form>
           <BottomWarning
