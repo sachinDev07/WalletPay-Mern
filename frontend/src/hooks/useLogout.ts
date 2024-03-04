@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../api/axios";
 import { toast } from "react-toastify";
 
 import useAuth from "./useAuth";
@@ -6,7 +6,7 @@ import useAuth from "./useAuth";
 
 const useLogout = () => {
   const { setAuth } = useAuth();
-
+  
   const logout = async () => {
     setAuth({
       id: "",
@@ -17,14 +17,7 @@ const useLogout = () => {
       message: "",
     });
     try {
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      };
-      const response = await axios.post("http://localhost:7001/api/v1/users/logout",{},options);
+      const response = await axios.post("/users/logout",{});
       toast.success(response?.data?.message);
     } catch (error) {
       console.error(error);
