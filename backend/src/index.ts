@@ -8,6 +8,7 @@ import userRoutes from "./routes/user-routes";
 import infoRoutes from "./routes/info-routes";
 import accountRoutes from "./routes/account-routes";
 import refreshTokenRoutes from "./routes/refreshToken-routes";
+import notificationRoutes from "./routes/notifications-routes";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/api/v1", infoRoutes);
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", accountRoutes);
 app.use("/api/v1", refreshTokenRoutes);
+app.use("/api/v1", notificationRoutes);
 
 connectDB()
   .then(() => {

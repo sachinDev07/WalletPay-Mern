@@ -1,5 +1,10 @@
 import mongoose, { Document } from "mongoose";
 
+export enum READ_STATUS {
+    TRUE = "true",
+    FALSE = "false",
+}
+
 export interface NotificationSchemaType extends Document {
   senderId: string;
   receiverId: string;
@@ -21,6 +26,11 @@ const notificationSchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: true,
+    },
+    read: {
+      type: Boolean,
+      enum: READ_STATUS,
+      default: READ_STATUS.FALSE,
     },
   },
   { timestamps: true },
