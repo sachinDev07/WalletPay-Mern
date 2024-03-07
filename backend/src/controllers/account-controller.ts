@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import { CustomRequest } from "../custome";
 import Account from "../model/account";
+import Notification from "../model/notification";
 
 async function getUserBalance(req: CustomRequest, res: Response) {
   try {
@@ -57,6 +58,14 @@ async function handleTransfer(req: CustomRequest, res: Response) {
       { userId: to },
       { $inc: { balance: amount } },
     ).session(session);
+
+    const notification = new Notification({
+      senderId: req.user?._id,
+      receiverId: to,
+      amount,
+    });
+
+    await notification.save();
 
     // commit the transaction
     await session.commitTransaction();
