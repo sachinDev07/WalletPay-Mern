@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.notification_modal {
+  overflow: scroll;
+  scrollbar-width:none;
+}

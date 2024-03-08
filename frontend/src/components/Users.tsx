@@ -69,7 +69,7 @@ export const Users = () => {
       isMounted = false;
       controller.abort();
     };
-  }, [filter, page]);
+  }, [filter, page, axiosPrivate, dispatch]);
 
   if (loading) {
     return (
