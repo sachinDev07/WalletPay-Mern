@@ -7,19 +7,22 @@ import { RecoilRoot } from "recoil";
 import store from "./redux/store.ts";
 import { AuthProvider } from "./context/AuthProvider.tsx";
 import { Provider } from "react-redux";
+import { NotificationProvider } from "./context/NotificationProvider.tsx";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
   <AuthProvider>
     <AuthProvider>
       <Provider store={store}>
-        <RecoilRoot>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/*" element={<App />} />
-            </Routes>
-          </BrowserRouter>
-        </RecoilRoot>
+        <NotificationProvider>
+          <RecoilRoot>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/*" element={<App />} />
+              </Routes>
+            </BrowserRouter>
+          </RecoilRoot>
+        </NotificationProvider>
       </Provider>
     </AuthProvider>
   </AuthProvider>,
