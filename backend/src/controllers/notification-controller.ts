@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import Notification from "../model/notification";
 import { CustomRequest } from "../custome";
 
@@ -36,4 +36,23 @@ async function getNotifications(req: CustomRequest, res: Response) {
   }
 }
 
-export { getNotifications };
+async function deleteNotification(req: Request, res: Response) {
+  try {
+    const id = req.body?.id;
+    if (!id) {
+      return res.status(400).json({ message: "ID is missing" });
+    }
+
+    const response = await Notification.deleteOne({ _id: id });
+    if (response.deletedCount === 0) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+export { getNotifications, deleteNotification };
