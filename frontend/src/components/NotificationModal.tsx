@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "../api/axios";
 import { FaXmark } from "react-icons/fa6";
+
 import Notification from "./Notification";
+import { NotificationContext } from "../context/NotificationProvider";
 
 interface SenderDetails {
   firstname: string;
@@ -12,7 +14,6 @@ interface Notification {
   amount: number;
   read: boolean;
   createdAt: string;
-
   senderDetails: SenderDetails;
 }
 
@@ -22,6 +23,8 @@ interface ApiResponse {
 
 const NotificationModal = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const { notificationToggle, setNotificationToggle } =
+    useContext(NotificationContext);
 
   const getNotifications = async () => {
     try {
@@ -48,29 +51,38 @@ const NotificationModal = () => {
   };
 
   return (
-    <div className="absolute top-10 left-1/2 right-1/2 -translate-x-1/2 bg-gray-100 w-[300px] h-[300px] rounded-md p-2 shadow-black ">
-      <div className="flex justify-between items-center">
-        <span className="text-black font-medium text-xl">Notifications</span>
-        <button
-          type="button"
-          className="p-[4px] bg-slate-300 hover:bg-slate-400 transition duration-150 ease-in-out rounded-full"
-        >
-          <FaXmark />
-        </button>
+    notificationToggle && (
+      <div className="relative">
+        <div id="talkbubble" className="text-gray-100"></div>
+        <div className="absolute top-4 left-1/2 right-1/2 -translate-x-1/2 bg-gray-100 w-[300px] rounded-md p-2 shadow-black">
+          <div className="flex justify-between items-center">
+            <span className="text-black font-medium">Notifications</span>
+            <button
+              type="button"
+              onClick={() => setNotificationToggle((prev) => !prev)}
+              className="p-[4px] bg-slate-300 hover:bg-slate-400 hover:text-white transition duration-150 ease-in-out rounded-full"
+            >
+              <FaXmark />
+            </button>
+          </div>
+          <div className="mt-2 overflow-auto max-h-[250px] notification_modal">
+            {notifications.length > 0 ? (
+              notifications.map((notification) => (
+                <Notification
+                  key={notification?._id}
+                  amount={notification?.amount}
+                  name={notification?.senderDetails?.firstname}
+                  read={notification?.read}
+                  date={handleDate(notification?.createdAt)}
+                />
+              ))
+            ) : (
+              <p className="text-center font-medium">No messages are present</p>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="mt-2 h-[260px] notification_modal">
-        {notifications.length > 0 &&
-          notifications.map((notification) => (
-            <Notification
-              key={notification?._id}
-              amount={notification?.amount}
-              name={notification?.senderDetails?.firstname}
-              read={notification?.read}
-              date={handleDate(notification?.createdAt)}
-            />
-          ))}
-      </div>
-    </div>
+    )
   );
 };
 
