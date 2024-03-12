@@ -2,14 +2,29 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import CharacterLogo from "./CharacterLogo";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 
+import axios from "../api/axios";
+
 type NotificationType = {
+  id: string;
   amount: number;
   name: string;
   read: boolean;
   date: string;
 };
 
-const Notification = ({ amount, name, read, date }: NotificationType) => {
+const Notification = ({ id, amount, name, read, date }: NotificationType) => {
+
+  const deleteNotification = async (id:string) => {
+    try {
+      await axios.delete("/notifications/delete", {
+        data: { id },
+      });
+    } 
+    catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div
       className={`${
@@ -36,6 +51,7 @@ const Notification = ({ amount, name, read, date }: NotificationType) => {
       </div>
       <div className="text-center flex flex-col justify-between gap-[4px]">
         <button
+          onClick={() => deleteNotification(id)}
           className="p-[4px] text-sm bg-slate-300 hover:text-white hover:bg-slate-400 active:text-black  rounded-full"
           title="Delete"
         >

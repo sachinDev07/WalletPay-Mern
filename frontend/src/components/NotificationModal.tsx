@@ -4,6 +4,7 @@ import { FaXmark } from "react-icons/fa6";
 
 import Notification from "./Notification";
 import { NotificationContext } from "../context/NotificationProvider";
+import { handleDate } from "../utils/handleDate";
 
 interface SenderDetails {
   firstname: string;
@@ -41,15 +42,6 @@ const NotificationModal = () => {
     getNotifications();
   }, []);
 
-  const handleDate = (timestamp: string) => {
-    const date = new Date(timestamp);
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-    const year = date.getUTCFullYear();
-    const formattedDate = `${day}-${month}-${year}`;
-    return formattedDate;
-  };
-
   return (
     notificationToggle && (
       <div className="relative">
@@ -70,6 +62,7 @@ const NotificationModal = () => {
               notifications.map((notification) => (
                 <Notification
                   key={notification?._id}
+                  id={notification?._id}
                   amount={notification?.amount}
                   name={notification?.senderDetails?.firstname}
                   read={notification?.read}
