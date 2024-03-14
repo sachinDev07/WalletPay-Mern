@@ -1,4 +1,6 @@
 import express from "express";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
 import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -11,6 +13,8 @@ import refreshTokenRoutes from "./routes/refreshToken-routes";
 import notificationRoutes from "./routes/notifications-routes";
 
 const app = express();
+const server = createServer(app);
+const io = new Server();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,10 +32,18 @@ app.use("/api/v1", accountRoutes);
 app.use("/api/v1", refreshTokenRoutes);
 app.use("/api/v1", notificationRoutes);
 
+server.on("connection", (socket) => {
+  console.log("Someone has connect");
+  
+  socket.on("Disconnect", () => {
+    console.log("Someone has left");
+  });
+});
+
 connectDB()
   .then(() => {
     console.log("Database connected successfully!");
-    app.listen(process.env.PORT, () => {
+    server.listen(process.env.PORT, () => {
       console.log("Server is up on port: ", process.env.PORT);
     });
   })
