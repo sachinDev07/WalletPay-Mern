@@ -3,6 +3,7 @@ import User from "../model/user";
 import jwt from "jsonwebtoken";
 
 import { JwtPayload } from "../utils/common/auth";
+import ServerConfig from "../config/server-config";
 
 async function handleRefreshToken(req: Request, res: Response) {
   try {
@@ -21,7 +22,7 @@ async function handleRefreshToken(req: Request, res: Response) {
 
     const decodedToken = jwt.verify(
       incomingRefreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string,
+      ServerConfig.REFRESH_TOKEN_SECRET as string,
     ) as JwtPayload;
     if (!decodedToken) {
       return res
@@ -31,8 +32,8 @@ async function handleRefreshToken(req: Request, res: Response) {
 
     const accessToken = jwt.sign(
       { id: decodedToken.id, email: decodedToken.email },
-      process.env.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
+     ServerConfig.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: ServerConfig.ACCESS_TOKEN_EXPIRY },
     );
 
     return res.json({

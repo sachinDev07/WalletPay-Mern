@@ -1,5 +1,6 @@
 import mongoose, { Document } from "mongoose";
 import bcrypt from "bcryptjs";
+import ServerConfig from "../config/server-config";
 
 export interface UserSchemaType extends Document {
   _id: string;
@@ -53,7 +54,7 @@ userSchema.pre("save", function encrypt(next) {
   if (this.isModified("password")) {
     this.password = bcrypt.hashSync(
       this.password,
-      parseInt(process.env.SALT_ROUNDS as string),
+      parseInt(ServerConfig.SALT_ROUNDS as string),
     );
   }
   next();

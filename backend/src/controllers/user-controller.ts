@@ -7,6 +7,7 @@ import User from "../model/user";
 import * as Auth from "../utils/common/auth";
 import { CustomRequest } from "../custome";
 import Account from "../model/account";
+import ServerConfig from "../config/server-config";
 
 const userSignUpSchema = zod.object({
   firstname: zod
@@ -86,13 +87,13 @@ async function signin(req: Request, res: Response) {
 
     const accessToken = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY as string },
+      ServerConfig.ACCESS_TOKEN_SECRET as string,
+      { expiresIn: ServerConfig.ACCESS_TOKEN_EXPIRY as string },
     );
     const refreshToken = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.REFRESH_TOKEN_SECRET as string,
-      { expiresIn: process.env.REFRESH_TOKEN_EXPIRY as string },
+      ServerConfig.REFRESH_TOKEN_SECRET as string,
+      { expiresIn: ServerConfig.REFRESH_TOKEN_EXPIRY as string },
     );
 
     user.refreshToken = refreshToken;
@@ -161,7 +162,7 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
     if (password) {
       req.body.password = bcrypt.hashSync(
         password,
-        parseInt(process.env.SALT_ROUNDS as string),
+        parseInt(ServerConfig.SALT_ROUNDS as string),
       );
     }
 

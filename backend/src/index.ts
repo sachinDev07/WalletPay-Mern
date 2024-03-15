@@ -1,10 +1,10 @@
 import express from "express";
-import { createServer } from "node:http";
+import http from "http";
 import { Server } from "socket.io";
-import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+import ServerConfig from "./config/server-config";
 import connectDB from "./db/db";
 import userRoutes from "./routes/user-routes";
 import infoRoutes from "./routes/info-routes";
@@ -13,8 +13,18 @@ import refreshTokenRoutes from "./routes/refreshToken-routes";
 import notificationRoutes from "./routes/notifications-routes";
 
 const app = express();
-const server = createServer(app);
-const io = new Server();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("A new user has connected ", socket.id);
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -32,19 +42,11 @@ app.use("/api/v1", accountRoutes);
 app.use("/api/v1", refreshTokenRoutes);
 app.use("/api/v1", notificationRoutes);
 
-server.on("connection", (socket) => {
-  console.log("Someone has connect");
-  
-  socket.on("Disconnect", () => {
-    console.log("Someone has left");
-  });
-});
-
 connectDB()
   .then(() => {
     console.log("Database connected successfully!");
-    server.listen(process.env.PORT, () => {
-      console.log("Server is up on port: ", process.env.PORT);
+    server.listen(ServerConfig.PORT, () => {
+      console.log("Server is up on port: ", ServerConfig.PORT);
     });
   })
   .catch((error) => {

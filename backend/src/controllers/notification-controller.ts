@@ -23,7 +23,7 @@ async function getNotifications(req: CustomRequest, res: Response) {
           "senderDetails.refreshToken": 0,
         },
       },
-    ]);
+    ]).sort({ createdAt: "desc" });
 
     if (!notifications || notifications.length === 0) {
       return res.status(404).json({ message: "No messages present" });
