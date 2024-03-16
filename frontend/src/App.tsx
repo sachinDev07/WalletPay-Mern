@@ -29,20 +29,4 @@ function App() {
   );
 }
 
-// function App() {
-//   const location = useLocation();
-//   const displayHeader = !["/signup", "/login"].includes(location.pathname);
-//   return (
-//     <AuthProvider>
-//       <Provider store={store}>
-//         <RecoilRoot>
-//           {displayHeader && <Header />}
-//           <Outlet />
-//           <Toast />
-//         </RecoilRoot>
-//       </Provider>
-//     </AuthProvider>
-//   );
-// }
-
 export default App;

@@ -1,10 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import axios from "../api/axios";
 import { FaXmark } from "react-icons/fa6";
 
 import Notification from "./Notification";
 import { NotificationContext } from "../context/NotificationProvider";
 import { handleDate } from "../utils/handleDate";
+import { useQuery } from "@tanstack/react-query";
 
 interface SenderDetails {
   firstname: string;
@@ -23,24 +24,28 @@ interface ApiResponse {
 }
 
 const NotificationModal = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
   const { notificationToggle, setNotificationToggle } =
     useContext(NotificationContext);
 
-  const getNotifications = async () => {
-    try {
-      const response = await axios.get<ApiResponse>("/notifications", {
-        withCredentials: true,
-      });
-      setNotifications(response.data?.notifications);
-    } catch (error) {
-      console.error(error);
-    }
+  const getNotification = async () => {
+    const response = await axios.get<ApiResponse>("/notifications", {
+      withCredentials: true,
+    });
+    return response.data;
   };
 
+  const { data: notifications, refetch } = useQuery<ApiResponse, Error>({
+    queryKey: ["notifications"],
+    queryFn: getNotification,
+  });
+
   useEffect(() => {
-    getNotifications();
-  }, []);
+    const intervalId = setInterval(() => {
+      refetch();
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [refetch]);
 
   return (
     notificationToggle && (
@@ -58,8 +63,9 @@ const NotificationModal = () => {
             </button>
           </div>
           <div className="mt-2 overflow-auto max-h-[250px] notification_modal">
-            {notifications.length > 0 ? (
-              notifications.map((notification) => (
+            {notifications?.notifications?.length &&
+            notifications?.notifications?.length > 0 ? (
+              notifications?.notifications?.map((notification) => (
                 <Notification
                   key={notification?._id}
                   id={notification?._id}
@@ -70,7 +76,7 @@ const NotificationModal = () => {
                 />
               ))
             ) : (
-              <p className="text-center font-medium">No messages are present</p>
+              <p>No messages are present</p>
             )}
           </div>
         </div>
