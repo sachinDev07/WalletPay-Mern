@@ -1,6 +1,4 @@
 import express from "express";
-import http from "http";
-import { Server } from "socket.io";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
@@ -13,18 +11,6 @@ import refreshTokenRoutes from "./routes/refreshToken-routes";
 import notificationRoutes from "./routes/notifications-routes";
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log("A new user has connected ", socket.id);
-});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,7 +31,7 @@ app.use("/api/v1", notificationRoutes);
 connectDB()
   .then(() => {
     console.log("Database connected successfully!");
-    server.listen(ServerConfig.PORT, () => {
+    app.listen(ServerConfig.PORT, () => {
       console.log("Server is up on port: ", ServerConfig.PORT);
     });
   })
