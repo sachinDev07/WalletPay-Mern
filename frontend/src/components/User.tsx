@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
+import CharacterLogo from "./CharacterLogo";
 
 interface UserDetails {
   id: string;
@@ -17,11 +18,14 @@ const User = ({ id, firstChar, firstName, lastName }: UserDetails) => {
   return (
     <div className="flex justify-between items-center mt-4">
       <div className="flex items-center">
-        <div className="rounded-full h-8 w-8 md:h-12 md:w-12 bg-slate-200 flex justify-center mt-1 mr-2">
-          <div className="flex flex-col justify-center h-full text-lg md:text-xl font-bold">
-            {firstChar.toUpperCase()}
-          </div>
-        </div>
+        <CharacterLogo
+          character={firstChar.toUpperCase()}
+          width="w-12 mr-2"
+          height="h-12"
+          bgColor="bg-slate-200"
+          textColor=""
+          textSize="text-lg md:text-xl"
+        />
         <div className="flex flex-col justify-center h-full">
           <div>
             {firstName.charAt(0).toUpperCase() + firstName.substring(1)}{" "}

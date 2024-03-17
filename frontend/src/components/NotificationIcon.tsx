@@ -11,7 +11,7 @@ const NotificationIcon = () => {
       <button
         type="button"
         onClick={() => setNotificationToggle((prev) => !prev)}
-        className="mt p-2 hover:bg-slate-200 rounded-full transition duration-150 ease-in-out"
+        className="mt p-2 hover:bg-slate-200 rounded-full transition duration-150 ease-in-out active:bg-slate-300"
       >
         <FaBell className="text-xl" />
       </button>

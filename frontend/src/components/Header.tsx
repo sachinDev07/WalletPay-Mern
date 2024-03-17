@@ -33,7 +33,7 @@ const Header = () => {
         <NotificationIcon />
         <button
           onClick={signOut}
-          className="rounded-full h-8 w-8 md:h-10 md:w-10 bg-slate-200 text-xl font-bold flex justify-center items-center cursor-pointer"
+          className="rounded-full h-8 w-8 md:h-10 md:w-10 bg-slate-200 text-xl font-bold flex justify-center items-center cursor-pointer active:bg-slate-300"
         >
           {username.charAt(0).toUpperCase()}
         </button>
