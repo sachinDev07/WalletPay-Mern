@@ -10,25 +10,23 @@ import { AuthProvider } from "./context/AuthProvider.tsx";
 import { Provider } from "react-redux";
 import { NotificationProvider } from "./context/NotificationProvider.tsx";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
   <AuthProvider>
-    <AuthProvider>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <NotificationProvider>
-            <RecoilRoot>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/*" element={<App />} />
-                </Routes>
-              </BrowserRouter>
-            </RecoilRoot>
-          </NotificationProvider>
-        </QueryClientProvider>
-      </Provider>
-    </AuthProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <NotificationProvider>
+          <RecoilRoot>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/*" element={<App />} />
+              </Routes>
+            </BrowserRouter>
+          </RecoilRoot>
+        </NotificationProvider>
+      </QueryClientProvider>
+    </Provider>
   </AuthProvider>,
 );
