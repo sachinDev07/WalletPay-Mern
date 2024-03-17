@@ -59,6 +59,7 @@ const SignIn = () => {
       setAuth({ id, firstname, lastname, role, accessToken, message });
       localStorage.setItem("id", id);
       localStorage.setItem("username", firstname);
+      localStorage.setItem("fullname", firstname + " " + lastname);
       toast.success(response?.data?.message);
       navigate("/", { replace: true });
     } catch (error) {

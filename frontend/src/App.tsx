@@ -7,11 +7,12 @@ import SendMoney from "./pages/SendMoney";
 import PersistLogin from "./components/PersistentLogin";
 import RequiredAuth from "./components/RequiredAuth";
 import Layout from "./components/Layout";
+import UserProfileModalProvider from "./context/UserProfileContext";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<UserProfileModalProvider><Layout /></UserProfileModalProvider>}>
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
 
