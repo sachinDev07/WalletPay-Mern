@@ -70,9 +70,9 @@ const Header = () => {
                   Update Profile
                 </button>
               </div>
-              <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer">
+              <div onClick={signOut} className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer">
                 <FaSignOutAlt />
-                <button onClick={signOut} className="w-full text-start ">
+                <button  className="w-full text-start ">
                   Sign Out
                 </button>
               </div>

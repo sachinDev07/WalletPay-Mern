@@ -1,15 +1,13 @@
-import { useContext, useEffect } from "react";
-import axios from "../api/axios";
+import { useContext } from "react";
 import { FaXmark } from "react-icons/fa6";
 
 import Notification from "./Notification";
 import { NotificationContext } from "../context/NotificationProvider";
 import { handleDate } from "../utils/handleDate";
-import { useQuery } from "@tanstack/react-query";
 
-interface SenderDetails {
+type SenderDetails = {
   firstname: string;
-}
+};
 
 interface Notification {
   _id: string;
@@ -19,33 +17,13 @@ interface Notification {
   senderDetails: SenderDetails;
 }
 
-interface ApiResponse {
+type NotificationModalProps = {
   notifications: Notification[];
-}
+};
 
-const NotificationModal = () => {
+const NotificationModal = ({ notifications }: NotificationModalProps) => {
   const { notificationToggle, setNotificationToggle } =
     useContext(NotificationContext);
-
-  const getNotification = async () => {
-    const response = await axios.get<ApiResponse>("/notifications", {
-      withCredentials: true,
-    });
-    return response.data;
-  };
-
-  const { data: notifications, refetch } = useQuery<ApiResponse, Error>({
-    queryKey: ["notifications"],
-    queryFn: getNotification,
-  });
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      refetch();
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-  }, [refetch]);
 
   return (
     notificationToggle && (
@@ -63,14 +41,13 @@ const NotificationModal = () => {
             </button>
           </div>
           <div className="mt-2 overflow-auto max-h-[250px] notification_modal">
-            {notifications?.notifications?.length &&
-            notifications?.notifications?.length > 0 ? (
-              notifications?.notifications?.map((notification) => (
+            {notifications?.length && notifications?.length > 0 ? (
+              notifications?.map((notification) => (
                 <Notification
-                  key={notification?._id}
-                  id={notification?._id}
+                  key={notification._id}
+                  id={notification._id}
                   amount={notification?.amount}
-                  name={notification?.senderDetails?.firstname}
+                  name={notification?.senderDetails.firstname}
                   read={notification?.read}
                   date={handleDate(notification?.createdAt)}
                 />

@@ -1,11 +1,50 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaBell } from "react-icons/fa";
 
 import NotificationModal from "./NotificationModal";
 import { NotificationContext } from "../context/NotificationProvider";
+import axios from "../api/axios";
+
+interface SenderDetails {
+  firstname: string;
+}
+
+interface Notification {
+  _id: string;
+  amount: number;
+  read: boolean;
+  createdAt: string;
+  senderDetails: SenderDetails;
+}
+
+interface ApiResponse {
+  notifications: Notification[];
+}
 
 const NotificationIcon = () => {
   const { setNotificationToggle } = useContext(NotificationContext);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const getNotifications = async () => {
+    try {
+      const response = await axios.get<ApiResponse>("/notifications", {
+        withCredentials: true,
+      });
+      setNotifications(response.data?.notifications);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      getNotifications();
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <section className="relative">
       <button
@@ -15,7 +54,7 @@ const NotificationIcon = () => {
       >
         <FaBell className="text-xl" />
       </button>
-      <NotificationModal />
+      <NotificationModal notifications={notifications} />
     </section>
   );
 };
