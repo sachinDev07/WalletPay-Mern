@@ -24,6 +24,8 @@ interface ApiResponse {
 const NotificationIcon = () => {
   const { setNotificationToggle } = useContext(NotificationContext);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadNotificatonCount, setUnreadNotificatonCount] =
+    useState<number>(0);
 
   const getNotifications = async () => {
     try {
@@ -31,6 +33,10 @@ const NotificationIcon = () => {
         withCredentials: true,
       });
       setNotifications(response.data?.notifications);
+      const unreadCount = response.data?.notifications.filter(
+        (notification) => !notification.read,
+      ).length;
+      setUnreadNotificatonCount(unreadCount);
     } catch (error) {
       console.error(error);
       return null;
@@ -54,6 +60,9 @@ const NotificationIcon = () => {
       >
         <FaBell className="text-xl" />
       </button>
+      <div className="absolute top-[3px] left-[19px] w-4 h-4 rounded-full flex justify-center items-center text-[10px] font-bold bg-red-100 border-red-300 border-2">
+        {unreadNotificatonCount}
+      </div>
       <NotificationModal notifications={notifications} />
     </section>
   );
