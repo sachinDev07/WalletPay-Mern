@@ -1,7 +1,6 @@
 import { MdOutlineDeleteOutline } from "react-icons/md";
-import CharacterLogo from "./CharacterLogo";
-import { IoCheckmarkDoneSharp } from "react-icons/io5";
 
+import CharacterLogo from "./CharacterLogo";
 import axios from "../api/axios";
 
 type NotificationType = {
@@ -13,14 +12,12 @@ type NotificationType = {
 };
 
 const Notification = ({ id, amount, name, read, date }: NotificationType) => {
-
-  const deleteNotification = async (id:string) => {
+  const deleteNotification = async (id: string) => {
     try {
       await axios.delete("/notifications/delete", {
         data: { id },
       });
-    } 
-    catch (error) {
+    } catch (error) {
       console.error(error);
     }
   };
@@ -56,12 +53,6 @@ const Notification = ({ id, amount, name, read, date }: NotificationType) => {
           title="Delete"
         >
           <MdOutlineDeleteOutline />
-        </button>
-        <button
-          className="p-[4px] text-sm bg-slate-300 hover:text-white hover:bg-slate-400 active:text-black rounded-full"
-          title="Mark as read"
-        >
-          <IoCheckmarkDoneSharp />
         </button>
       </div>
     </div>
