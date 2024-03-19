@@ -5,6 +5,7 @@ import NotificationModal from "./NotificationModal";
 import { NotificationContext } from "../context/NotificationProvider";
 import axios from "../api/axios";
 import { UserProfileModalContext } from "../context/UserProfileContext";
+import useMediaQuery from "../hooks/useMediaQuery";
 
 interface SenderDetails {
   firstname: string;
@@ -27,6 +28,7 @@ const NotificationIcon = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadNotificatonCount, setUnreadNotificatonCount] = useState<number>(0);
   const { setUserProfileToggle } = useContext(UserProfileModalContext);
+  const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
 
   const getNotifications = async () => {
     try {
@@ -81,7 +83,8 @@ const NotificationIcon = () => {
           {unreadNotificatonCount}
         </div>
       )}
-      <NotificationModal notifications={notifications} />
+      { isAboveMediumScreens && <NotificationModal notifications={notifications} />}
+      
     </section>
   );
 };

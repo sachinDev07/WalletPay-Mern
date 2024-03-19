@@ -10,6 +10,7 @@ import NotificationIcon from "./NotificationIcon";
 import CharacterLogo from "./CharacterLogo";
 import { UserProfileModalContext } from "../context/UserProfileContext";
 import { NotificationContext } from "../context/NotificationProvider";
+import useMediaQuery from "../hooks/useMediaQuery";
 
 const Header = () => {
   const username = useRecoilValue(profileAtom);
@@ -18,6 +19,7 @@ const Header = () => {
   const logout = useLogout();
   const { userProfileToggle, setUserProfileToggle } = useContext(UserProfileModalContext);
   const { setNotificationToggle } = useContext(NotificationContext);
+  const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const userFullName = localStorage.getItem("fullname") as string;
 
   const signOut = async () => {
@@ -32,6 +34,7 @@ const Header = () => {
   useEffect(() => {
     setUsername(localStorage.getItem("username") as string);
   }, [setUsername]);
+  
   return (
     <header className="shadow h-14 px-4 md:px-28 flex justify-between items-center">
       <div className="text-xl font-bold hover:scale-105 transition duration-150 ease-in-out">
@@ -40,16 +43,16 @@ const Header = () => {
       <div className="flex justify-between items-center space-x-4">
         <NotificationIcon />
         <button
-          onClick={(e) =>{ 
+          onClick={(e) => {
             e.stopPropagation();
-            setUserProfileToggle(prev => !prev)
+            setUserProfileToggle((prev) => !prev);
             setNotificationToggle(false);
           }}
           className="rounded-full h-8 w-8 md:h-10 md:w-10 bg-slate-200 text-xl font-bold flex justify-center items-center cursor-pointer active:bg-slate-300"
         >
           {username.charAt(0).toUpperCase()}
         </button>
-        {userProfileToggle && (
+        {isAboveMediumScreens && userProfileToggle && (
           <div className="absolute top-14 right-24 border-2 border-slate-400 rounded-md w-64 bg-white shadow-lg">
             <div className="flex flex-col items-center p-2">
               <CharacterLogo
@@ -71,11 +74,12 @@ const Header = () => {
                   Update Profile
                 </button>
               </div>
-              <div onClick={signOut} className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer">
+              <div
+                onClick={signOut}
+                className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer"
+              >
                 <FaSignOutAlt />
-                <button  className="w-full text-start ">
-                  Sign Out
-                </button>
+                <button className="w-full text-start ">Sign Out</button>
               </div>
             </div>
           </div>
