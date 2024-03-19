@@ -6,6 +6,7 @@ export enum READ_STATUS {
 }
 
 export interface NotificationSchemaType extends Document {
+  _id: string;
   senderId: string;
   receiverId: string;
   amount: number;

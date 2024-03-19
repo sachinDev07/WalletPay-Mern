@@ -7,7 +7,7 @@ async function getNotifications(req: CustomRequest, res: Response) {
     const id = req.user?._id;
 
     const notifications = await Notification.aggregate([
-      { $match: { receiverId: id, read: false } },
+      { $match: { receiverId: id } },
       {
         $lookup: {
           from: "users",
@@ -55,4 +55,24 @@ async function deleteNotification(req: Request, res: Response) {
   }
 }
 
-export { getNotifications, deleteNotification };
+async function markNotificationsAsRead(req: Request, res: Response) {
+  try {
+    const { notificationIds } = req.body;
+
+    if (!notificationIds || !Array.isArray(notificationIds)) {
+      return res.status(400).json({ message: "Invalid request body" });
+    }
+
+    const updatedResult = await Notification.updateMany(
+      { _id: { $in: notificationIds } },
+      { read: true }
+    );
+
+    return res.status(200).json({ success: true, data: updatedResult });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export { getNotifications, deleteNotification, markNotificationsAsRead };

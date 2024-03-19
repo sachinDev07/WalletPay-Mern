@@ -10,5 +10,7 @@ router.get("/notifications", checkAuth, NotificationController.getNotifications 
 
 router.delete("/notifications/delete", checkAuth, NotificationController.deleteNotification );
 
+router.post("/notifications/mark-as-read", checkAuth, NotificationController.markNotificationsAsRead );
+
 
 export default router;
