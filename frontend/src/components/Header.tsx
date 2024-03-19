@@ -9,15 +9,15 @@ import useLogout from "../hooks/useLogout";
 import NotificationIcon from "./NotificationIcon";
 import CharacterLogo from "./CharacterLogo";
 import { UserProfileModalContext } from "../context/UserProfileContext";
+import { NotificationContext } from "../context/NotificationProvider";
 
 const Header = () => {
   const username = useRecoilValue(profileAtom);
   const setUsername = useSetRecoilState(profileAtom);
   const navigate = useNavigate();
   const logout = useLogout();
-  const { userProfileToggle, setUserProfileToggle } = useContext(
-    UserProfileModalContext,
-  );
+  const { userProfileToggle, setUserProfileToggle } = useContext(UserProfileModalContext);
+  const { setNotificationToggle } = useContext(NotificationContext);
   const userFullName = localStorage.getItem("fullname") as string;
 
   const signOut = async () => {
@@ -43,6 +43,7 @@ const Header = () => {
           onClick={(e) =>{ 
             e.stopPropagation();
             setUserProfileToggle(prev => !prev)
+            setNotificationToggle(false);
           }}
           className="rounded-full h-8 w-8 md:h-10 md:w-10 bg-slate-200 text-xl font-bold flex justify-center items-center cursor-pointer active:bg-slate-300"
         >

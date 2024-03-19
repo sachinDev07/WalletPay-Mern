@@ -4,6 +4,7 @@ import { FaBell } from "react-icons/fa";
 import NotificationModal from "./NotificationModal";
 import { NotificationContext } from "../context/NotificationProvider";
 import axios from "../api/axios";
+import { UserProfileModalContext } from "../context/UserProfileContext";
 
 interface SenderDetails {
   firstname: string;
@@ -25,6 +26,7 @@ const NotificationIcon = () => {
   const { setNotificationToggle } = useContext(NotificationContext);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadNotificatonCount, setUnreadNotificatonCount] = useState<number>(0);
+  const { setUserProfileToggle } = useContext(UserProfileModalContext);
 
   const getNotifications = async () => {
     try {
@@ -64,9 +66,11 @@ const NotificationIcon = () => {
     <section className="relative">
       <button
         type="button"
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           markNotificationsAsRead();
           setNotificationToggle((prev) => !prev);
+          setUserProfileToggle(false);
         }}
         className="mt p-2 hover:bg-slate-200 rounded-full transition duration-150 ease-in-out active:bg-slate-300"
       >
