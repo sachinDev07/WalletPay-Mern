@@ -53,13 +53,18 @@ const SignIn = () => {
         options,
       );
 
-      const { id, firstname, lastname, role, accessToken, message } =
-        response.data;
+      const { id, firstname, lastname, email, role, accessToken, message } = response.data;
 
       setAuth({ id, firstname, lastname, role, accessToken, message });
       localStorage.setItem("id", id);
-      localStorage.setItem("username", firstname);
-      localStorage.setItem("fullname", firstname + " " + lastname);
+      localStorage.setItem(
+        "userDetails",
+        JSON.stringify({
+          firstname: firstname,
+          lastname: lastname,
+          email: email,
+        }),
+      );
       toast.success(response?.data?.message);
       navigate("/", { replace: true });
     } catch (error) {
