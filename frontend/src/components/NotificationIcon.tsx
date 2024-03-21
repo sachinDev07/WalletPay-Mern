@@ -6,6 +6,7 @@ import { NotificationContext } from "../context/NotificationProvider";
 import axios from "../api/axios";
 import { UserProfileModalContext } from "../context/UserProfileContext";
 import useMediaQuery from "../hooks/useMediaQuery";
+import SmallScreenNotificationMenu from "./SmallScreenNotificationMenu";
 
 interface SenderDetails {
   firstname: string;
@@ -32,7 +33,7 @@ const NotificationIcon = () => {
 
   const getNotifications = async () => {
     try {
-      const response = await axios.get<ApiResponse>("/notifications",);
+      const response = await axios.get<ApiResponse>("/notifications");
       setNotifications(response.data?.notifications);
       const unreadCount = response.data?.notifications.filter(
         (notification) => !notification.read,
@@ -55,7 +56,7 @@ const NotificationIcon = () => {
       console.error(error);
     }
   };
-  
+
   useEffect(() => {
     const intervalId = setInterval(async () => {
       getNotifications();
@@ -65,27 +66,36 @@ const NotificationIcon = () => {
   }, []);
 
   return (
-    <section className="relative">
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          markNotificationsAsRead();
-          setNotificationToggle((prev) => !prev);
-          setUserProfileToggle(false);
-        }}
-        className="mt p-2 hover:bg-slate-200 rounded-full transition duration-150 ease-in-out active:bg-slate-300"
-      >
-        <FaBell className="text-xl" />
-      </button>
-      {unreadNotificatonCount !== 0 && (
-        <div className="absolute top-[3px] left-[19px] w-4 h-4 rounded-full flex justify-center items-center text-[10px] font-bold bg-red-100 border-red-300 border-2">
-          {unreadNotificatonCount}
-        </div>
-      )}
-      { isAboveMediumScreens && <NotificationModal notifications={notifications} />}
-      
-    </section>
+    <>
+      <section className="relative">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            markNotificationsAsRead();
+            setNotificationToggle((prev) => !prev);
+            setUserProfileToggle(false);
+          }}
+          className="mt p-2 hover:bg-slate-200 rounded-full transition duration-150 ease-in-out active:bg-slate-300"
+        >
+          <FaBell className="text-xl" />
+        </button>
+        {unreadNotificatonCount !== 0 && (
+          <div className="absolute top-[3px] left-[19px] w-4 h-4 rounded-full flex justify-center items-center text-[10px] font-bold bg-red-100 border-red-300 border-2">
+            {unreadNotificatonCount}
+          </div>
+        )}
+        {isAboveMediumScreens && (
+          <NotificationModal getNotifications={getNotifications} notifications={notifications} />
+        )}
+      </section>
+
+      <div onClick={(e) => e.stopPropagation()}>
+        {!isAboveMediumScreens && (
+          <SmallScreenNotificationMenu getNotifications={getNotifications} notifications={notifications} />
+        )}
+      </div>
+    </>
   );
 };
 

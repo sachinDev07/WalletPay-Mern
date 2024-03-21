@@ -7,16 +7,17 @@ type NotificationType = {
   id: string;
   amount: number;
   name: string;
-  read: boolean;
   date: string;
+  refreshNotifications: () => void;
 };
 
-const Notification = ({ id, amount, name, read, date }: NotificationType) => {
+const Notification = ({ id, amount, name, date, refreshNotifications }: NotificationType) => {
   const deleteNotification = async (id: string) => {
     try {
       await axios.delete("/notifications/delete", {
         data: { id },
       });
+      refreshNotifications();
     } catch (error) {
       console.error(error);
     }
@@ -24,32 +25,30 @@ const Notification = ({ id, amount, name, read, date }: NotificationType) => {
 
   return (
     <div
-      className={`${
-        read ? "bg-gray-200" : "bg-gray-300"
-      } mt-2 p-1 flex justify-between items-center rounded-md`}
+      className={`mt-2 p-1 flex justify-between items-center rounded-md bg-gray-200`}
     >
       <div className="flex items-center justify-between">
         <CharacterLogo
           character={name.charAt(0).toUpperCase()}
           width="w-6"
           height="h-6"
-          bgColor="bg-slate-400"
+          bgColor="bg-slate-300"
           textColor="text-black"
-          textSize="text-sm"
+          textSize="text-lg md:text-sm"
         />
-        <div className="w-[220px] ml-2">
-          <p className="text-xs font-medium text-wrap">
+        <div className="w-[260px] md:w-[220px] ml-3 md:ml-2">
+          <p className="text-sm md:text-xs font-medium text-wrap">
             You have received Rs.
             <span className="font-bold">{amount}</span> from{" "}
             <span className="font-bold">{name}</span> on{" "}
-            <span className="font-bold">{date}</span>.
+            <span className="font-bold">{date}</span>
           </p>
         </div>
       </div>
       <div className="text-center flex flex-col justify-between gap-[4px]">
         <button
           onClick={() => deleteNotification(id)}
-          className="p-[4px] text-sm bg-slate-300 hover:text-white hover:bg-slate-400 active:text-black  rounded-full"
+          className="p-[4px] text-lg md:text-sm bg-slate-300 hover:text-white hover:bg-slate-400 active:text-black  rounded-full"
           title="Delete"
         >
           <MdOutlineDeleteOutline />

@@ -4,6 +4,7 @@ import { FaXmark } from "react-icons/fa6";
 import Notification from "./Notification";
 import { NotificationContext } from "../context/NotificationProvider";
 import { handleDate } from "../utils/handleDate";
+import noMessageImg from "../assets/img/noMessage.png";
 
 type SenderDetails = {
   firstname: string;
@@ -12,6 +13,7 @@ type SenderDetails = {
 interface Notification {
   _id: string;
   amount: number;
+  read: boolean;
   createdAt: string;
   senderDetails: SenderDetails;
 }
@@ -21,25 +23,31 @@ type NotificationModalProps = {
   getNotifications: () => void;
 };
 
-const NotificationModal = ({ getNotifications, notifications }: NotificationModalProps) => {
-  const { notificationToggle, setNotificationToggle } = useContext(NotificationContext);
+const SmallScreenNotificationMenu = ({
+  getNotifications,
+  notifications,
+}: NotificationModalProps) => {
+  const { notificationToggle, setNotificationToggle } =
+    useContext(NotificationContext);
 
   return (
     notificationToggle && (
-      <div className={"relative"}>
-        <div id="talkbubble" className="text-gray-100"></div>
-        <div className="absolute top-4 left-1/2 right-1/2 -translate-x-1/2 bg-gray-100 w-[300px] rounded-md p-2 shadow-black">
+      <div className="absolute top-0 left-0 right-0 w-screen h-screen bg-white z-10">
+        <div className="absolute top-0 w-full p-4 bg-gray-100 rounded-md shadow-black">
           <div className="flex justify-between items-center">
             <span className="text-black font-medium">Notifications</span>
             <button
               type="button"
-              onClick={() => setNotificationToggle((prev) => !prev)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setNotificationToggle(false);
+              }}
               className="p-[4px] bg-slate-300 hover:bg-slate-400 hover:text-white transition duration-150 ease-in-out rounded-full"
             >
               <FaXmark />
             </button>
           </div>
-          <div className="mt-2 overflow-auto max-h-[250px] notification_modal">
+          <div className="mt-2 overflow-auto max-h-[calc(100vh-5rem)] notification_modal">
             {notifications?.length && notifications?.length > 0 ? (
               notifications?.map((notification) => (
                 <Notification
@@ -52,7 +60,14 @@ const NotificationModal = ({ getNotifications, notifications }: NotificationModa
                 />
               ))
             ) : (
-              <p>No messages are present</p>
+              <div className="flex flex-col items-center">
+                <img
+                  src={noMessageImg}
+                  alt="No new messages found"
+                  className="mt-8"
+                />
+                <p className="text-center -mt-8">No messages are present</p>
+              </div>
             )}
           </div>
         </div>
@@ -61,4 +76,4 @@ const NotificationModal = ({ getNotifications, notifications }: NotificationModa
   );
 };
 
-export default NotificationModal;
+export default SmallScreenNotificationMenu;

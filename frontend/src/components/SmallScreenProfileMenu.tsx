@@ -19,11 +19,11 @@ const SmallScreenProfileMenu = ({
 }: SmallScreenProfileMenuProps) => {
   return (
     <section
-      className={`absolute top-0 z-10 ${
+      className={`fixed top-0 right-0 z-10 ${
         showProfileMenu
-          ? "translate-x-full transition duration-300 ease-in-out"
+          ? "translate-x-[100%] transition duration-300 ease-in-out"
           : "translate-x-0 transition duration-300 ease-in-out"
-      } bg-white w-full h-full p-4`}
+      } bg-white w-screen h-screen p-4 overflow-hidden`}
     >
       <FaArrowLeftLong
         onClick={() => setShowProfileMenu(true)}

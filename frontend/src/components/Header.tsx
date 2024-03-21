@@ -29,9 +29,8 @@ const Header = () => {
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
   const [showProfileMenu, setShowProfileMenu] = useState<boolean>(true);
 
-  const userDetailsString = localStorage.getItem("userDetails");
-  const userDetails: UserDetailsType = userDetailsString ? JSON.parse(userDetailsString) : null;
-  const { firstname, lastname, email } = userDetails;
+  const userDetailsString = localStorage.getItem("userDetails") as string;
+  const userDetails: UserDetailsType = JSON.parse(userDetailsString);
 
   const signOut = async () => {
     try {
@@ -43,8 +42,8 @@ const Header = () => {
   };
 
   useEffect(() => {
-    setUsername(firstname + " " + lastname);
-  }, [setUsername, firstname, lastname]);
+    setUsername(userDetails.firstname + " " + userDetails.lastname);
+  }, [setUsername, userDetails?.firstname, userDetails?.lastname]);
 
   return (
     <>
@@ -52,7 +51,7 @@ const Header = () => {
         <div className="text-xl font-bold hover:scale-105 transition duration-150 ease-in-out">
           WalletPay
         </div>
-        <div className="flex justify-between items-center space-x-4">
+        <div className="flex justify-between items-center gap-2">
           <NotificationIcon />
           <button
             onClick={(e) => {
@@ -76,10 +75,8 @@ const Header = () => {
                   textColor=""
                   textSize="text-lg md:text-2xl"
                 />
-                <p className="mt-[4px] text-center font-bold">
-                  {username}
-                </p>
-                <p className="text-sm">{email}</p>
+                <p className="mt-[4px] text-center font-bold">{username}</p>
+                <p className="text-sm">{userDetails?.email}</p>
               </div>
               <div className="my-2 border-t-2 border-slate-300">
                 <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer">
@@ -103,7 +100,7 @@ const Header = () => {
       {!isAboveMediumScreens && (
         <SmallScreenProfileMenu
           username={username}
-          email={email}
+          email={userDetails?.email}
           showProfileMenu={showProfileMenu}
           setShowProfileMenu={setShowProfileMenu}
           onclick={signOut}
