@@ -2,7 +2,7 @@ import { ReactNode, createContext, useState } from "react";
 
 interface LoaderContextValue {
   loading: boolean;
-  loadingToggle: () => void;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface LoaderContextProviderProps {
@@ -11,16 +11,14 @@ interface LoaderContextProviderProps {
 
 export const LoaderContext = createContext<LoaderContextValue>({
   loading: false,
-  loadingToggle: () => {},
+  setLoading: () => {},
 });
 
 const LoaderProvider = ({ children }: LoaderContextProviderProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const loadingToggle = () => setLoading((prev) => !prev);
-
   return (
-    <LoaderContext.Provider value={{ loading, loadingToggle }}>
+    <LoaderContext.Provider value={{ loading, setLoading }}>
       {children}
     </LoaderContext.Provider>
   );
