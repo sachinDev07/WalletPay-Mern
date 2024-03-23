@@ -61,7 +61,7 @@ const Header = () => {
               e.stopPropagation();
               setUserProfileToggle((prev) => !prev);
               setNotificationToggle(false);
-              setShowProfileMenu(false);
+              setShowProfileMenu(true);
             }}
             className="rounded-full h-8 w-8 md:h-10 md:w-10 bg-slate-200 text-xl font-bold flex justify-center items-center cursor-pointer active:bg-slate-300"
           >

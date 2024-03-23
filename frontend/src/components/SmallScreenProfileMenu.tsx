@@ -22,12 +22,12 @@ const SmallScreenProfileMenu = ({
     <section
       className={`fixed top-0 right-0 z-10 ${
         showProfileMenu
-          ? "translate-x-[100%] transition duration-300 ease-in-out"
-          : "translate-x-0 transition duration-300 ease-in-out"
+          ? "translate-x-0 transition duration-300 ease-in-out"
+          : "translate-x-[100%] transition duration-300 ease-in-out"
       } bg-white w-screen h-screen p-4 overflow-hidden`}
     >
       <FaArrowLeftLong
-        onClick={() => setShowProfileMenu(true)}
+        onClick={() => setShowProfileMenu(false)}
         className="text-xl cursor-pointer"
       />
       <div className="">
@@ -44,7 +44,7 @@ const SmallScreenProfileMenu = ({
           <p className="text-sm">{email}</p>
         </div>
         <div className="my-2 border-t-2 border-slate-300">
-          <Link to="/update-profile" onClick={() => setShowProfileMenu(true)}>
+          <Link to="/update-profile" onClick={() => setShowProfileMenu(false)}>
             <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md">
               <FaUser />
               <button className="w-full text-start font-medium space-x-2">
