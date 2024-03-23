@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
+
 const UpdateProfile = () => {
-    
   return (
     <section className="mt-4 p-4 flex flex-col justify-center items-center">
       <div className="w-full md:max-w-[500px]">
@@ -50,6 +51,16 @@ const UpdateProfile = () => {
             >
               Update Profile
             </button>
+          </div>
+          <div className="mt-2 flex items-center before:border-t before:flex-1 before:border-gray-500 after:border-t after:flex-1 after:border-gray-500 mx-2">
+            <Link to="/">
+              <button
+                type="submit"
+                className="mx-4 text-gray-600 hover:text-black active:text-gray-800"
+              >
+                Go To Homepage
+              </button>
+            </Link>
           </div>
         </form>
       </div>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { FaArrowLeftLong, FaUser } from "react-icons/fa6";
 import CharacterLogo from "./CharacterLogo";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -43,12 +44,14 @@ const SmallScreenProfileMenu = ({
           <p className="text-sm">{email}</p>
         </div>
         <div className="my-2 border-t-2 border-slate-300">
-          <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md">
-            <FaUser />
-            <button className="w-full text-start font-medium space-x-2">
-              Update Profile
-            </button>
-          </div>
+          <Link to="/update-profile" onClick={() => setShowProfileMenu(true)}>
+            <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md">
+              <FaUser />
+              <button className="w-full text-start font-medium space-x-2">
+                Update Profile
+              </button>
+            </div>
+          </Link>
           <div
             onClick={onclick}
             className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md"

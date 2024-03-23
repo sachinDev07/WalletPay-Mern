@@ -5,6 +5,7 @@ import Toast from "./Toast";
 import Header from "./Header";
 import { UserProfileModalContext } from "../context/UserProfileContext";
 import { NotificationContext } from "../context/NotificationProvider";
+import ShowProfileProvider from "../context/ShowProfileContext";
 
 const Layout = () => {
   const location = useLocation();
@@ -22,7 +23,11 @@ const Layout = () => {
   };
   return (
     <main ref={layoutRef} onClick={handleClick}>
-      {displayHeader && <Header />}
+      {displayHeader && (
+        <ShowProfileProvider>
+          <Header />
+        </ShowProfileProvider>
+      )}
       <Outlet />
       <Toast />
     </main>

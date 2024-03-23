@@ -1,7 +1,7 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { profileAtom } from "../atoms";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa6";
 import { FaSignOutAlt } from "react-icons/fa";
 
@@ -12,6 +12,7 @@ import { UserProfileModalContext } from "../context/UserProfileContext";
 import { NotificationContext } from "../context/NotificationProvider";
 import useMediaQuery from "../hooks/useMediaQuery";
 import SmallScreenProfileMenu from "./SmallScreenProfileMenu";
+import { ShowProfileContext } from "../context/ShowProfileContext";
 
 interface UserDetailsType {
   firstname: string;
@@ -24,11 +25,13 @@ const Header = () => {
   const setUsername = useSetRecoilState(profileAtom);
   const navigate = useNavigate();
   const logout = useLogout();
-  const { userProfileToggle, setUserProfileToggle } = useContext(UserProfileModalContext);
+  const { userProfileToggle, setUserProfileToggle } = useContext(
+    UserProfileModalContext,
+  );
   const { setNotificationToggle } = useContext(NotificationContext);
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
-  const [showProfileMenu, setShowProfileMenu] = useState<boolean>(true);
-
+  const { showProfileMenu, setShowProfileMenu } =
+    useContext(ShowProfileContext);
   const userDetailsString = localStorage.getItem("userDetails") as string;
   const userDetails: UserDetailsType = JSON.parse(userDetailsString);
 
@@ -79,12 +82,14 @@ const Header = () => {
                 <p className="text-sm">{userDetails?.email}</p>
               </div>
               <div className="my-2 border-t-2 border-slate-300">
-                <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer">
-                  <FaUser />
-                  <button className="w-full text-start space-x-2">
-                    Update Profile
-                  </button>
-                </div>
+                <Link to="/update-profile">
+                  <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer">
+                    <FaUser />
+                    <button className="w-full text-start space-x-2">
+                      Update Profile
+                    </button>
+                  </div>
+                </Link>
                 <div
                   onClick={signOut}
                   className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer"
