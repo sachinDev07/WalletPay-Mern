@@ -8,6 +8,7 @@ import PersistLogin from "./components/PersistentLogin";
 import RequiredAuth from "./components/RequiredAuth";
 import Layout from "./components/Layout";
 import UserProfileModalProvider from "./context/UserProfileContext";
+import UpdateProfile from "./pages/UpdateProfile";
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
 
           <Route element={<RequiredAuth allowedRole="user" />}>
             <Route path="/send" element={<SendMoney />} />
+          </Route>
+
+          <Route element={<RequiredAuth allowedRole="user" />}>
+            <Route path="/update-profile" element={<UpdateProfile />} />
           </Route>
         </Route>
       </Route>
