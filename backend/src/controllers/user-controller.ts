@@ -34,7 +34,10 @@ const userUpdateSchema = zod.object({
     .string()
     .min(3, { message: "Must be 3 or more characters long" }),
   lastname: zod.string(),
-  password: zod
+  oldPassword: zod
+    .string()
+    .min(5, { message: "Must be 5 or more characters long" }),
+  newPassword: zod
     .string()
     .min(5, { message: "Must be 5 or more characters long" }),
 });
@@ -152,31 +155,49 @@ async function isAuthenticated(token: string) {
 
 async function updateUserInformation(req: CustomRequest, res: Response) {
   try {
-    const { success } = userUpdateSchema.safeParse(req.body);
-    if (!success) {
-      return res.status(411).json({ message: "Error while updating the user" });
+    const userId = req.user?._id;
+    if (!userId) {
+      return res.status(404).json({ message: "User id not found" });
     }
 
-    const { firstname, lastname, password } = req.body;
+    const validateUserData = userUpdateSchema.parse(req.body);
 
-    if (password) {
-      req.body.password = bcrypt.hashSync(
-        password,
-        parseInt(ServerConfig.SALT_ROUNDS as string),
-      );
+    const foundUser = await User.findById({ _id: userId });
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    const passwordMatch = foundUser.isPasswordCorrect(
+      validateUserData.oldPassword,
+    );
+    if (!passwordMatch) {
+      return res.status(400).json({ message: "Old password is wrong" });
+    }
+
+    const { firstname, lastname, newPassword } = validateUserData;
+
+    const newDecodePassword = bcrypt.hashSync(
+      newPassword,
+      parseInt(ServerConfig.SALT_ROUNDS as string),
+    );
 
     const user = await User.findByIdAndUpdate(
-      req.user?._id,
+      foundUser._id,
       {
         $set: {
           firstname,
           lastname,
-          password: req.body.password,
+          password: newDecodePassword,
         },
       },
       { new: true },
     ).select("-password -refreshToken");
+
+    if(!user) {
+      return res.status(404).json({ message: "User does not exists"});
+    }
+
+    await user.save({ validateBeforeSave: false });
 
     return res
       .status(200)
