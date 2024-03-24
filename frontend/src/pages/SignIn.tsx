@@ -1,13 +1,14 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import BottomWarning from "../components/BottomWarning";
 import Heading from "../components/Heading";
 import SubHeading from "../components/SubHeading";
 import useAuth from "../hooks/useAuth";
 import { useEffect } from "react";
+import useLoader from "../hooks/useLoader";
+import Spinner from "../components/Spinner";
 
 type FormData = {
   email: string;
@@ -24,12 +25,18 @@ interface UserDetails {
   accessToken: string;
 }
 
+interface ErrorDetailsType {
+  message: string;
+}
+
 interface ValidationError {
   message: string;
   errors: Record<string, string[]>;
+  error: ErrorDetailsType[];
 }
 
 const SignIn = () => {
+  const { isLoading, startLoading, stopLoading, isError, setError, clearError } = useLoader();
   const { setAuth, persist, setPersist } = useAuth();
   const navigate = useNavigate();
   const {
@@ -47,13 +54,15 @@ const SignIn = () => {
       withCredentials: true,
     };
     try {
+      startLoading();
       const response = await axios.post<UserDetails>(
         "http://localhost:7001/api/v1/users/signin",
         data,
         options,
       );
 
-      const { id, firstname, lastname, email, role, accessToken, message } = response.data;
+      const { id, firstname, lastname, email, role, accessToken, message } =
+        response.data;
 
       setAuth({ id, firstname, lastname, role, accessToken, message });
       localStorage.setItem("id", id);
@@ -65,21 +74,23 @@ const SignIn = () => {
           email: email,
         }),
       );
-      toast.success(response?.data?.message);
+      clearError();
       navigate("/", { replace: true });
     } catch (error) {
-      console.error(error);
       if (axios.isAxiosError<ValidationError>(error)) {
         if (error.response) {
-          toast.error(error.response.data.message);
-        } else {
-          console.error(error);
-          toast.error("An error occurred");
+          if (error.response.data.message) {
+            setError(error.response.data.message);
+          } else if (error.response.data.error[0].message) {
+            setError(error.response.data.error[0].message);
+          }
         }
       } else {
-        console.error(error);
-        toast.error("An error occurred");
+        setError("An error occurred");
       }
+      console.error(error);
+    } finally {
+      stopLoading();
     }
   };
 
@@ -142,12 +153,15 @@ const SignIn = () => {
                 <label htmlFor="persist">Trust this device ?</label>
               </div>
             </div>
+            {isError && (
+              <p className="w-full mt-4 text-red-400 text-center">{isError}</p>
+            )}
             <div className="pt-4 text-center">
               <button
                 type="submit"
-                className="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                className="w-full text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2"
               >
-                Sign In
+                {isLoading ? <Spinner /> : "Sign In"}
               </button>
             </div>
           </form>

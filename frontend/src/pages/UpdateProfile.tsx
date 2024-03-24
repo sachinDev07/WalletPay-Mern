@@ -1,6 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
+import Spinner from "../components/Spinner";
+import useLoader from "../hooks/useLoader";
 
 const UpdateProfile = () => {
   const firstname = useRef<HTMLInputElement | null>(null);
@@ -8,24 +10,27 @@ const UpdateProfile = () => {
   const oldPassword = useRef<HTMLInputElement | null>(null);
   const newPassword = useRef<HTMLInputElement | null>(null);
 
-  const [error, setError] = useState<string | null>(null);
+  const { isLoading, startLoading, stopLoading, isError, setError, clearError } = useLoader();
 
   const navigate = useNavigate();
 
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.put("http://localhost:7001/api/v1/users/update", {
+      startLoading()
+      await axios.put("/users/update", {
         firstname: firstname.current?.value,
         lastname: lastname.current?.value,
         oldPassword: oldPassword.current?.value,
         newPassword: newPassword.current?.value,
       });
+      clearError();
       navigate("/login");
     } catch (error: any) {
       setError(error?.response?.data?.message);
       console.error(error);
-      return;
+    } finally {
+      stopLoading();
     }
   };
 
@@ -80,13 +85,13 @@ const UpdateProfile = () => {
               />
             </label>
           </div>
-          <div>{error && <p className="pt-2 text-red-400">{error}</p>}</div>
+          <div>{isError && <p className="pt-2 text-red-400">{isError}</p>}</div>
           <div className="mt-8 text-center">
             <button
               type="submit"
               className="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
-              Update Profile
+              { isLoading ? <Spinner /> : "Update Profile" }
             </button>
           </div>
           <div className="mt-2 flex items-center before:border-t before:flex-1 before:border-gray-500 after:border-t after:flex-1 after:border-gray-500 mx-2">

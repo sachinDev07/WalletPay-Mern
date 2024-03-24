@@ -1,5 +1,4 @@
 import axios from "../api/axios";
-import { toast } from "react-toastify";
 
 import useAuth from "./useAuth";
 
@@ -17,8 +16,7 @@ const useLogout = () => {
       message: "",
     });
     try {
-      const response = await axios.post("/users/logout",{});
-      toast.success(response?.data?.message);
+      await axios.post("/users/logout",{});
     } catch (error) {
       console.error(error);
     }

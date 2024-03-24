@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-// import axios from "axios";
 
 import User from "./User";
 import SearchBar from "./SearchBar";
@@ -35,7 +33,7 @@ export const Users = () => {
       try {
         const userIdToExclude = localStorage.getItem("id");
         if (!userIdToExclude) {
-          toast.error("User is not authorized!");
+          return;
         }
 
         const response = await axiosPrivate.get<{
@@ -50,12 +48,7 @@ export const Users = () => {
         isMounted && setUsers(data.data);
         const totalNoOfPages = Math.ceil(data.totalUsers / 5);
         dispatch(getTotalPages(totalNoOfPages));
-      } catch (error: any) {
-        if (error?.response && error?.response.status === 404) {
-          toast.error("No user found");
-        } else {
-          toast.error("An error occurred");
-        }
+      } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);

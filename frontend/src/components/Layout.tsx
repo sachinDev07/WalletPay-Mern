@@ -1,7 +1,6 @@
 import { useContext, useRef } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import Toast from "./Toast";
 import Header from "./Header";
 import { UserProfileModalContext } from "../context/UserProfileContext";
 import { NotificationContext } from "../context/NotificationProvider";
@@ -29,7 +28,6 @@ const Layout = () => {
         </ShowProfileProvider>
       )}
       <Outlet />
-      <Toast />
     </main>
   );
 };

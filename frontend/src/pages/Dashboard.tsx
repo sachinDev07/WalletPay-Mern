@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
 
 import Balance from "../components/Balance";
 import Users from "../components/Users";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-
-interface ValidationError {
-  message: string;
-  errors: Record<string, string[]>;
-}
 
 const Dashboard = () => {
   const [balance, setBalance] = useState<number | null>(null);
@@ -26,11 +19,6 @@ const Dashboard = () => {
       setBalance(data.balance);
       setRefresh(false);
     } catch (error) {
-      if (axios.isAxiosError<ValidationError>(error)) {
-        if (error.response) {
-          toast.error(error.response.data.message);
-        }
-      }
       console.error(error);
     }
   }
