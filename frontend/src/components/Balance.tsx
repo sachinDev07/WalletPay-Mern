@@ -1,4 +1,4 @@
-import refreshIcon from "../assets/img/refreshIcon.png";
+import RotateSpinIcon from "./RotateSpinIcon";
 
 type BalanceProps = {
   value: number | null;
@@ -9,17 +9,11 @@ type BalanceProps = {
 const Balance = ({ value, refresh, onclick }: BalanceProps) => {
   return (
     <div className="flex items-center">
-      <img
-        src={refreshIcon}
-        alt="icon for refreshing user balance"
-        title="Refresh"
-        onClick={onclick}
-        className={`${
-          refresh ? "animate-spin" : ""
-        } mr-2 w-5 h-5 cursor-pointer`}
-      />
-      <div className="font-bold text-lg">Your balance:</div>
-      <div className="font-medium ml-4 text-lg">
+      <div onClick={onclick} className={`${refresh ? "animate-spin" : "" } mr-2 w-5 h-5 cursor-pointer`}>
+        <RotateSpinIcon />
+      </div>
+      <div className="font-bold text-lg dark:text-white">Your balance:</div>
+      <div className="font-medium ml-4 text-lg dark:text-white">
         Rs {value?.toLocaleString()}
       </div>
     </div>

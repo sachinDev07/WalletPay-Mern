@@ -11,7 +11,13 @@ type NotificationType = {
   refreshNotifications: () => void;
 };
 
-const Notification = ({ id, amount, name, date, refreshNotifications }: NotificationType) => {
+const Notification = ({
+  id,
+  amount,
+  name,
+  date,
+  refreshNotifications,
+}: NotificationType) => {
   const deleteNotification = async (id: string) => {
     try {
       await axios.delete("/notifications/delete", {
@@ -30,13 +36,13 @@ const Notification = ({ id, amount, name, date, refreshNotifications }: Notifica
       <div className="flex items-center justify-between">
         <CharacterLogo
           character={name.charAt(0).toUpperCase()}
-          width="w-6"
-          height="h-6"
-          bgColor="bg-slate-300"
+          width="w-6 md:w-6"
+          height="h-6 md:h-6"
+          bgColor="bg-slate-300 dark:bg-slate-400"
           textColor="text-black"
           textSize="text-lg md:text-sm"
         />
-        <div className="w-[260px] md:w-[220px] ml-3 md:ml-2">
+        <div className="min-w-[220px] md:w-[210px] ml-3 md:ml-2">
           <p className="text-sm md:text-xs font-medium text-wrap">
             You have received Rs.
             <span className="font-bold">{amount}</span> from{" "}
@@ -48,7 +54,7 @@ const Notification = ({ id, amount, name, date, refreshNotifications }: Notifica
       <div className="text-center flex flex-col justify-between gap-[4px]">
         <button
           onClick={() => deleteNotification(id)}
-          className="p-[4px] text-lg md:text-sm bg-slate-300 hover:text-white hover:bg-slate-400 active:text-black  rounded-full"
+          className="p-[4px] text-lg md:text-sm bg-slate-300 hover:text-white hover:bg-slate-400 active:text-black rounded-full dark:bg-slate-400 dark:hover:bg-slate-600"
           title="Delete"
         >
           <MdOutlineDeleteOutline />

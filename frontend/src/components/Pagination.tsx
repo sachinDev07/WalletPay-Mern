@@ -13,7 +13,7 @@ const Pagination = () => {
           page > 1
             ? "block cursor-pointer hover:text-slate-900 transition duration-150 ease-in-out"
             : "opacity-0"
-        } text-slate-700 text-sm md:text-lg  mr-2 `}
+        } text-slate-700 text-sm md:text-lg  mr-2 dark:text-white`}
       />
 
       {[...Array.from({ length: totalPages })].map((_, i) => {
@@ -23,8 +23,8 @@ const Pagination = () => {
             onClick={() => dispatch(onPageButton(i + 1))}
             className={`py-1 px-3 cursor-pointer text-sm md:text-xl ${
               page === i + 1
-                ? "border-[3px] border-black rounded-md font-bold"
-                : "font-medium"
+                ? "border-[3px] border-black dark:border-white dark:text-white rounded-md font-bold"
+                : "font-medium dark:text-gray-300"
             }`}
           >
             {i + 1}
@@ -38,7 +38,7 @@ const Pagination = () => {
           page < totalPages
             ? "block hover:text-slate-900 transition duration-150 ease-in-out cursor-pointer"
             : "opacity-0"
-        }  text-slate-700 text-sm md:text-lg ml-2`}
+        }  text-slate-700 text-sm md:text-lg ml-2 dark:text-white`}
       />
     </div>
   );

@@ -32,10 +32,12 @@ const SmallScreenNotificationMenu = ({
 
   return (
     notificationToggle && (
-      <div className="absolute top-0 left-0 right-0 w-screen h-screen z-10 bg-gray-100">
-        <div className="absolute top-0 w-full p-4 rounded-md shadow-black">
+      <div className="absolute top-0 left-0 right-0 w-screen h-screen z-10 bg-gray-100 dark:bg-slate-800">
+        <div className="absolute top-0 w-full p-2 rounded-md shadow-black">
           <div className="flex justify-between items-center">
-            <span className="text-black font-medium">Notifications</span>
+            <span className="text-black font-medium dark:text-white">
+              Notifications
+            </span>
             <button
               type="button"
               onClick={(e) => {

@@ -27,7 +27,7 @@ const CharacterLogo = ({
   );
   return (
     <div className={classStr}>
-      <div className={`flex flex-col justify-center h-full font-bold`}>
+      <div className={`flex flex-col items-center justify-center h-full font-bold`}>
         {character.toUpperCase()}
       </div>
     </div>

@@ -77,9 +77,9 @@ export const Users = () => {
 
   return (
     <>
-      <div className="font-bold mt-6 text-lg">Users</div>
+      <div className="font-bold mt-6 text-lg dark:text-white">Users</div>
       <SearchBar setFilter={setFilter} />
-      <div>
+      <div className="mt-8">
         {users.length > 0 &&
           users?.map((user) => (
             <User

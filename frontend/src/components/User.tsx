@@ -20,9 +20,9 @@ const User = ({ id, firstChar, firstName, lastName }: UserDetails) => {
       <div className="flex items-center">
         <CharacterLogo
           character={firstChar.toUpperCase()}
-          width="w-12 mr-2"
-          height="h-12"
-          bgColor="bg-slate-200"
+          width="w-10 md:w-12 mr-2"
+          height="h-10 md:h-12"
+          bgColor="bg-slate-200 dark:bg-white"
           textColor=""
           textSize="text-lg md:text-xl"
         />

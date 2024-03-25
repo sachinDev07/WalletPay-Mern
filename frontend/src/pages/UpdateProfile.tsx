@@ -10,14 +10,21 @@ const UpdateProfile = () => {
   const oldPassword = useRef<HTMLInputElement | null>(null);
   const newPassword = useRef<HTMLInputElement | null>(null);
 
-  const { isLoading, startLoading, stopLoading, isError, setError, clearError } = useLoader();
+  const {
+    isLoading,
+    startLoading,
+    stopLoading,
+    isError,
+    setError,
+    clearError,
+  } = useLoader();
 
   const navigate = useNavigate();
 
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      startLoading()
+      startLoading();
       await axios.put("/users/update", {
         firstname: firstname.current?.value,
         lastname: lastname.current?.value,
@@ -35,53 +42,53 @@ const UpdateProfile = () => {
   };
 
   return (
-    <section className="mt-4 p-4 flex flex-col justify-center items-center">
+    <section className="mt-8 p-4 flex flex-col justify-center items-center">
       <div className="w-full md:max-w-[500px]">
-        <p className="text-center text-lg font-bold underline">
+        <p className="text-center text-lg font-bold underline dark:text-white">
           Update Your Profile
         </p>
         <form onSubmit={handleOnSubmit} className="mt-8 px-2 w-full">
-          <div className="mb-2">
-            <label className="font-medium text-left py-2">
+          <div className="mb-4">
+            <label className="font-medium text-left py-2 dark:text-white">
               First Name
               <input
                 ref={firstname}
                 required
                 type="text"
-                className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                className="block w-full  px-2 py-1 border border-slate-200 rounded dark:text-black outline-none"
               />
             </label>
           </div>
-          <div className="mb-2">
-            <label className="font-medium text-left py-2">
+          <div className="mb-4">
+            <label className="font-medium text-left py-2 dark:text-white">
               Last Name
               <input
                 ref={lastname}
                 required
                 type="text"
-                className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                className="block w-full  px-2 py-1 border border-slate-200 rounded dark:text-black  outline-none"
               />
             </label>
           </div>
-          <div className="mb-2">
-            <label className="font-medium text-left py-2">
+          <div className="mb-4">
+            <label className="font-medium text-left py-2 dark:text-white">
               Last Password
               <input
                 ref={oldPassword}
                 required
                 type="text"
-                className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                className="block w-full  px-2 py-1 border border-slate-200 rounded dark:text-black outline-none"
               />
             </label>
           </div>
-          <div className="mb-2">
-            <label className="font-medium text-left py-2">
+          <div className="mb-4">
+            <label className="font-medium text-left py-2 dark:text-white">
               New Password
               <input
                 ref={newPassword}
                 required
                 type="text"
-                className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                className="block w-full  px-2 py-1 border border-slate-200 rounded dark:text-black outline-none"
               />
             </label>
           </div>
@@ -91,14 +98,14 @@ const UpdateProfile = () => {
               type="submit"
               className="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
             >
-              { isLoading ? <Spinner /> : "Update Profile" }
+              {isLoading ? <Spinner /> : "Update Profile"}
             </button>
           </div>
-          <div className="mt-2 flex items-center before:border-t before:flex-1 before:border-gray-500 after:border-t after:flex-1 after:border-gray-500 mx-2">
+          <div className="mt-2 flex items-center before:border-t before:flex-1 before:border-gray-500 dark:before:border-white after:border-t after:flex-1 after:border-gray-500 dark:after:border-white mx-2">
             <Link to="/">
               <button
                 type="submit"
-                className="mx-4 text-gray-600 hover:text-black active:text-gray-800"
+                className="mx-4 text-gray-600 hover:text-black active:text-gray-800 dark:text-white dark:hover:text-slate-300"
               >
                 Go To Homepage
               </button>

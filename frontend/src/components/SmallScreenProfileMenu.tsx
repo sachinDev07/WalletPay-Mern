@@ -24,11 +24,11 @@ const SmallScreenProfileMenu = ({
         showProfileMenu
           ? "translate-x-0 transition duration-300 ease-in-out"
           : "translate-x-[100%] transition duration-300 ease-in-out"
-      } bg-white w-screen h-screen p-4 overflow-hidden`}
+      } bg-white w-screen h-screen p-4 overflow-hidden dark:bg-black`}
     >
       <FaArrowLeftLong
         onClick={() => setShowProfileMenu(false)}
-        className="text-xl cursor-pointer"
+        className="text-xl cursor-pointer dark:text-white"
       />
       <div className="">
         <div className="flex flex-col items-center p-2">
@@ -36,16 +36,18 @@ const SmallScreenProfileMenu = ({
             character={username.charAt(0).toUpperCase()}
             width="w-16"
             height="h-16"
-            bgColor="bg-slate-200"
+            bgColor="bg-slate-200 dark:bg-white"
             textColor=""
             textSize="text-3xl md:text-2xl"
           />
-          <p className="mt-[8px] text-center font-bold">{username}</p>
-          <p className="text-sm">{email}</p>
+          <p className="mt-[8px] text-center font-bold dark:text-white">
+            {username}
+          </p>
+          <p className="text-sm dark:text-white">{email}</p>
         </div>
         <div className="my-2 border-t-2 border-slate-300">
           <Link to="/update-profile" onClick={() => setShowProfileMenu(false)}>
-            <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md">
+            <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md dark:text-white dark:hover:text-black dark:hover:bg-slate-300">
               <FaUser />
               <button className="w-full text-start font-medium space-x-2">
                 Update Profile
@@ -54,7 +56,7 @@ const SmallScreenProfileMenu = ({
           </Link>
           <div
             onClick={onclick}
-            className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md"
+            className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md dark:text-white dark:hover:text-black dark:hover:bg-slate-300"
           >
             <FaSignOutAlt />
             <button className="w-full text-start font-medium">Sign Out</button>

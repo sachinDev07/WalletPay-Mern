@@ -51,9 +51,9 @@ const Header = () => {
 
   return (
     <>
-      <header className="shadow h-14 px-4 md:px-28 flex justify-between items-center">
-        <div className="text-xl font-bold hover:scale-105 transition duration-150 ease-in-out">
-          WalletPay
+      <header className="shadow h-14 px-4 md:px-28 flex justify-between items-center dark:shadow-slate-400">
+        <div className="text-xl font-bold hover:scale-105 transition duration-150 ease-in-out dark:text-white">
+          <Link to="/">WalletPay</Link>
         </div>
         <div className="flex justify-between items-center gap-2">
           <ThemeBtn />
@@ -65,12 +65,12 @@ const Header = () => {
               setNotificationToggle(false);
               setShowProfileMenu(true);
             }}
-            className="rounded-full h-8 w-8 md:h-10 md:w-10 bg-slate-200 text-xl font-bold flex justify-center items-center cursor-pointer active:bg-slate-300"
+            className="rounded-full h-7 w-7 md:h-9 md:w-9 bg-slate-200 text-lg font-bold flex justify-center items-center cursor-pointer active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200"
           >
             {username.charAt(0).toUpperCase()}
           </button>
           {isAboveMediumScreens && userProfileToggle && (
-            <div className="absolute top-14 right-24 border-2 border-slate-400 rounded-md w-64 bg-white shadow-lg">
+            <div className="absolute top-14 right-24 border-2 border-slate-400 rounded-md w-64 bg-white shadow-lg dark:bg-slate-800">
               <div className="flex flex-col items-center p-2">
                 <CharacterLogo
                   character={username.charAt(0).toUpperCase()}
@@ -80,12 +80,14 @@ const Header = () => {
                   textColor=""
                   textSize="text-lg md:text-2xl"
                 />
-                <p className="mt-[4px] text-center font-bold">{username}</p>
-                <p className="text-sm">{userDetails?.email}</p>
+                <p className="mt-[4px] text-center font-bold dark:text-white">
+                  {username}
+                </p>
+                <p className="text-sm dark:text-white">{userDetails?.email}</p>
               </div>
               <div className="my-2 border-t-2 border-slate-300">
                 <Link to="/update-profile">
-                  <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer">
+                  <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 dark:text-white dark:hover:text-black cursor-pointer">
                     <FaUser />
                     <button className="w-full text-start space-x-2">
                       Update Profile
@@ -94,7 +96,7 @@ const Header = () => {
                 </Link>
                 <div
                   onClick={signOut}
-                  className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer"
+                  className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer dark:text-white dark:hover:text-black"
                 >
                   <FaSignOutAlt />
                   <button className="w-full text-start ">Sign Out</button>
