@@ -13,6 +13,7 @@ import { NotificationContext } from "../context/NotificationProvider";
 import useMediaQuery from "../hooks/useMediaQuery";
 import SmallScreenProfileMenu from "./SmallScreenProfileMenu";
 import { ShowProfileContext } from "../context/ShowProfileContext";
+import ThemeBtn from "./ThemeBtn";
 
 interface UserDetailsType {
   firstname: string;
@@ -55,6 +56,7 @@ const Header = () => {
           WalletPay
         </div>
         <div className="flex justify-between items-center gap-2">
+          <ThemeBtn />
           <NotificationIcon />
           <button
             onClick={(e) => {
