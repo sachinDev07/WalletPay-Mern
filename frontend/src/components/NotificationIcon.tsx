@@ -27,7 +27,8 @@ interface ApiResponse {
 const NotificationIcon = () => {
   const { setNotificationToggle } = useContext(NotificationContext);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadNotificatonCount, setUnreadNotificatonCount] = useState<number>(0);
+  const [unreadNotificatonCount, setUnreadNotificatonCount] =
+    useState<number>(0);
   const { setUserProfileToggle } = useContext(UserProfileModalContext);
   const isAboveMediumScreens = useMediaQuery("(min-width: 768px)");
 
@@ -76,23 +77,29 @@ const NotificationIcon = () => {
             setNotificationToggle((prev) => !prev);
             setUserProfileToggle(false);
           }}
-          className="mt p-2 hover:bg-slate-200 rounded-full transition duration-150 ease-in-out active:bg-slate-300"
+          className="mt p-[4px] hover:bg-slate-200 rounded-full transition duration-150 ease-in-out active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200"
         >
-          <FaBell className="text-xl" />
+          <FaBell className="text-lg md:text-xl" />
         </button>
         {unreadNotificatonCount !== 0 && (
-          <div className="absolute top-[3px] left-[19px] w-4 h-4 rounded-full flex justify-center items-center text-[10px] font-bold bg-red-100 border-red-300 border-2">
+          <div className="absolute -top-[4px] left-[18px] w-4 h-4 rounded-full flex justify-center items-center text-[10px] font-bold bg-red-100 border-red-300 border-2 dark:border-black ">
             {unreadNotificatonCount}
           </div>
         )}
         {isAboveMediumScreens && (
-          <NotificationModal getNotifications={getNotifications} notifications={notifications} />
+          <NotificationModal
+            getNotifications={getNotifications}
+            notifications={notifications}
+          />
         )}
       </section>
 
       <div onClick={(e) => e.stopPropagation()}>
         {!isAboveMediumScreens && (
-          <SmallScreenNotificationMenu getNotifications={getNotifications} notifications={notifications} />
+          <SmallScreenNotificationMenu
+            getNotifications={getNotifications}
+            notifications={notifications}
+          />
         )}
       </div>
     </>

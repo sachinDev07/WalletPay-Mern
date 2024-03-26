@@ -30,19 +30,17 @@ const Notification = ({
   };
 
   return (
-    <div
-      className={`mt-2 p-1 flex justify-between items-center rounded-md bg-gray-200`}
-    >
-      <div className="flex items-center justify-between">
+    <div className={`mt-2 p-1 rounded-md bg-gray-200`}>
+      <div className="flex items-center justify-between space-x-4 md:space-x-2">
         <CharacterLogo
           character={name.charAt(0).toUpperCase()}
-          width="w-6 md:w-6"
+          width="w-9 md:w-9"
           height="h-6 md:h-6"
           bgColor="bg-slate-300 dark:bg-slate-400"
           textColor="text-black"
-          textSize="text-lg md:text-sm"
+          textSize="md:text-sm"
         />
-        <div className="min-w-[220px] md:w-[210px] ml-3 md:ml-2">
+        <div className="">
           <p className="text-sm md:text-xs font-medium text-wrap">
             You have received Rs.
             <span className="font-bold">{amount}</span> from{" "}
@@ -50,15 +48,15 @@ const Notification = ({
             <span className="font-bold">{date}</span>
           </p>
         </div>
-      </div>
-      <div className="text-center flex flex-col justify-between gap-[4px]">
-        <button
-          onClick={() => deleteNotification(id)}
-          className="p-[4px] text-lg md:text-sm bg-slate-300 hover:text-white hover:bg-slate-400 active:text-black rounded-full dark:bg-slate-400 dark:hover:bg-slate-600"
-          title="Delete"
-        >
-          <MdOutlineDeleteOutline />
-        </button>
+        <div className="text-center flex flex-col justify-between">
+          <button
+            onClick={() => deleteNotification(id)}
+            className="p-[4px] text-lg md:text-sm bg-slate-300 hover:text-white hover:bg-slate-400 active:text-black rounded-full dark:bg-slate-400 dark:hover:bg-slate-600"
+            title="Delete"
+          >
+            <MdOutlineDeleteOutline />
+          </button>
+        </div>
       </div>
     </div>
   );

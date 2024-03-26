@@ -31,7 +31,7 @@ const NotificationModal = ({
   return (
     notificationToggle && (
       <div className={"relative"}>
-        <div id="talkbubble" className="text-gray-100"></div>
+        <div id="talkbubble" className="text-gray-100 dark:text-gray-500"></div>
         <div className="absolute top-4 left-1/2 right-1/2 -translate-x-1/2 bg-gray-100 w-[300px] rounded-md p-2 shadow-black dark:bg-slate-800 dark:border-2 dark:shadow-lg">
           <div className="flex justify-between items-center">
             <span className="text-black font-medium dark:text-white">
