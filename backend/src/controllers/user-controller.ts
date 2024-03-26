@@ -193,8 +193,8 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
       { new: true },
     ).select("-password -refreshToken");
 
-    if(!user) {
-      return res.status(404).json({ message: "User does not exists"});
+    if (!user) {
+      return res.status(404).json({ message: "User does not exists" });
     }
 
     await user.save({ validateBeforeSave: false });
@@ -211,9 +211,7 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
     }
 
     if (error instanceof zod.ZodError) {
-      return res
-        .status(400)
-        .json({ message: error.errors[0].message });
+      return res.status(400).json({ message: error.errors[0].message });
     }
 
     return res
