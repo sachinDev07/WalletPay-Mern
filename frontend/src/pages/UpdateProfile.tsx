@@ -1,14 +1,34 @@
-import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import { useForm } from "react-hook-form";
+import * as Axios from "axios";
+
 import Spinner from "../components/Spinner";
 import useLoader from "../hooks/useLoader";
+import axios from "../api/axios";
+
+type UpdateProfileData = {
+  firstname: string;
+  lastname: string;
+  oldPassword: string;
+  newPassword: string;
+};
+
+interface ErrorDetailsType {
+  message: string;
+}
+
+interface ValidationError {
+  message: string;
+  errors: Record<string, string[]>;
+  error: ErrorDetailsType[];
+}
 
 const UpdateProfile = () => {
-  const firstname = useRef<HTMLInputElement | null>(null);
-  const lastname = useRef<HTMLInputElement | null>(null);
-  const oldPassword = useRef<HTMLInputElement | null>(null);
-  const newPassword = useRef<HTMLInputElement | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateProfileData>();
 
   const {
     isLoading,
@@ -21,20 +41,29 @@ const UpdateProfile = () => {
 
   const navigate = useNavigate();
 
-  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: UpdateProfileData) => {
+    clearError();
     try {
       startLoading();
-      await axios.put("/users/update", {
-        firstname: firstname.current?.value,
-        lastname: lastname.current?.value,
-        oldPassword: oldPassword.current?.value,
-        newPassword: newPassword.current?.value,
-      });
+      await axios.put(
+        "/users/update",
+        data,
+       
+      );
       clearError();
       navigate("/login");
-    } catch (error: any) {
-      setError(error?.response?.data?.message);
+    } catch (error) {
+      if (Axios.isAxiosError<ValidationError>(error)) {
+        if (error.response) {
+          if (error.response.data.message) {
+            setError(error.response.data.message);
+          } else if (error.response.data.error[0].message) {
+            setError(error.response.data.error[0].message);
+          }
+        }
+      } else {
+        setError("An error occurred");
+      }
       console.error(error);
     } finally {
       stopLoading();
@@ -47,53 +76,81 @@ const UpdateProfile = () => {
         <p className="text-center text-lg font-bold underline dark:text-white">
           Update Your Profile
         </p>
-        <form onSubmit={handleOnSubmit} className="mt-8 px-2 w-full">
-          <div className="mb-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 px-2 w-full">
+          <div className="mb-1">
             <label className="font-medium text-left py-2 dark:text-white">
               First Name
               <input
-                ref={firstname}
-                required
                 type="text"
+                {...register("firstname", {
+                  required: "This field is required",
+                })}
                 className="block w-full  px-2 py-1 border border-slate-200 rounded dark:text-black outline-none"
               />
             </label>
           </div>
-          <div className="mb-4">
+          {errors.firstname && (
+            <span className="text-red-500 text-sm">
+              {errors.firstname.message}
+            </span>
+          )}
+          <div className="mb-1 mt-3">
             <label className="font-medium text-left py-2 dark:text-white">
               Last Name
               <input
-                ref={lastname}
-                required
                 type="text"
+                {...register("lastname", {
+                  required: "This field is required",
+                })}
                 className="block w-full  px-2 py-1 border border-slate-200 rounded dark:text-black  outline-none"
               />
             </label>
           </div>
-          <div className="mb-4">
+          {errors.lastname && (
+            <span className="text-red-500 text-sm">
+              {errors.lastname.message}
+            </span>
+          )}
+          <div className="mb-1 mt-3">
             <label className="font-medium text-left py-2 dark:text-white">
-              Last Password
+              Old Password
               <input
-                ref={oldPassword}
-                required
                 type="text"
+                {...register("oldPassword", {
+                  required: "This field is required",
+                })}
                 className="block w-full  px-2 py-1 border border-slate-200 rounded dark:text-black outline-none"
               />
             </label>
           </div>
-          <div className="mb-4">
+          {errors.oldPassword && (
+            <span className="text-red-500 text-sm">
+              {errors.oldPassword.message}
+            </span>
+          )}
+          <div className="mb-1 mt-3">
             <label className="font-medium text-left py-2 dark:text-white">
               New Password
               <input
-                ref={newPassword}
-                required
                 type="text"
+                {...register("newPassword", {
+                  required: "This field is required",
+                })}
                 className="block w-full  px-2 py-1 border border-slate-200 rounded dark:text-black outline-none"
               />
             </label>
           </div>
-          <div>{isError && <p className="pt-2 text-red-400">{isError}</p>}</div>
-          <div className="mt-8 text-center">
+          {errors.newPassword && (
+            <span className="text-red-500 text-sm">
+              {errors.newPassword.message}
+            </span>
+          )}
+          <div>
+            {isError && (
+              <p className="pt-2 text-red-400 text-center">{isError}</p>
+            )}
+          </div>
+          <div className="mt-5 text-center">
             <button
               type="submit"
               className="w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
