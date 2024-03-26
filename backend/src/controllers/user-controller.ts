@@ -32,14 +32,14 @@ const userSignInSchema = zod.object({
 const userUpdateSchema = zod.object({
   firstname: zod
     .string()
-    .min(3, { message: "Must be 3 or more characters long" }),
+    .min(3, { message: "First name must be 3 or more characters long" }),
   lastname: zod.string(),
   oldPassword: zod
     .string()
-    .min(5, { message: "Must be 5 or more characters long" }),
+    .min(5, { message: "Old password must be 5 or more characters long" }),
   newPassword: zod
     .string()
-    .min(5, { message: "Must be 5 or more characters long" }),
+    .min(5, { message: "New password must be 5 or more characters long" }),
 });
 
 async function signup(req: Request, res: Response) {
@@ -209,6 +209,13 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
         .status(404)
         .json("The user requested to update is not present");
     }
+
+    if (error instanceof zod.ZodError) {
+      return res
+        .status(400)
+        .json({ message: error.errors[0].message });
+    }
+
     return res
       .status(500)
       .json({ message: "Cannot not update the user information" });
