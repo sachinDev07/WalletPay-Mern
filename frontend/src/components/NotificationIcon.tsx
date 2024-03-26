@@ -77,7 +77,7 @@ const NotificationIcon = () => {
             setNotificationToggle((prev) => !prev);
             setUserProfileToggle(false);
           }}
-          className="mt p-[4px] hover:bg-slate-200 rounded-full transition duration-150 ease-in-out active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200"
+          className="mt p-[5px] bg-slate-200 hover:bg-slate-300 rounded-full transition duration-150 ease-in-out active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200"
         >
           <FaBell className="text-lg md:text-xl" />
         </button>

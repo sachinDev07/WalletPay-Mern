@@ -65,7 +65,7 @@ const Header = () => {
               setNotificationToggle(false);
               setShowProfileMenu(true);
             }}
-            className="rounded-full h-7 w-7 md:h-9 md:w-9 bg-slate-200 text-lg font-bold flex justify-center items-center cursor-pointer active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200"
+            className="rounded-full h-7 w-7 md:h-9 md:w-9 bg-gray-200 hover:bg-gray-300 text-lg font-bold flex justify-center items-center cursor-pointer active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200 transition duration-150 ease-in-out"
           >
             {username.charAt(0).toUpperCase()}
           </button>

@@ -11,7 +11,7 @@ const SearchBar = ({
         onChange={(e) => setFilter(e.target.value)}
         type="text"
         placeholder="Search users..."
-        className="w-full px-2 py-1 border rounded border-slate-400 outline-none"
+        className="w-full px-2 py-1 border rounded dark:text-black border-slate-400 outline-none"
       ></input>
     </div>
   );
