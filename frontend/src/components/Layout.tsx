@@ -12,7 +12,9 @@ const Layout = () => {
   const displayHeader = !["/signup", "/login"].includes(location.pathname);
   const { setUserProfileToggle } = useContext(UserProfileModalContext);
   const { setNotificationToggle } = useContext(NotificationContext);
-  const [themeMode, setThemeMode] = useState<string>("light");
+  const [themeMode, setThemeMode] = useState<string>(
+    localStorage.getItem("theme") || "light",
+  );
 
   const layoutRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +27,7 @@ const Layout = () => {
   };
 
   useEffect(() => {
+    localStorage.setItem("theme", themeMode);
     document.querySelector("html")?.classList.remove("light", "dark");
     document.querySelector("html")?.classList.add(themeMode);
   }, [themeMode]);

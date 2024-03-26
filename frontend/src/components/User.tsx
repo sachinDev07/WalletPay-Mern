@@ -26,7 +26,7 @@ const User = ({ id, firstChar, firstName, lastName }: UserDetails) => {
           textColor=""
           textSize="text-lg md:text-xl"
         />
-        <div className="flex flex-col justify-center h-full">
+        <div className="flex flex-col justify-center h-full dark:text-white">
           <div>
             {firstName.charAt(0).toUpperCase() + firstName.substring(1)}{" "}
             {lastName}
