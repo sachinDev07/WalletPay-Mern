@@ -1,6 +1,6 @@
 const RotateSpinIcon = () => {
   return (
-    <div  onClick={onclick}>
+    <div>
       <svg
         viewBox="0 0 512 512"
         className="w-5 text-black dark:text-white"
