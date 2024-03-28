@@ -9,11 +9,6 @@
     "client": "cd ./ && npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "pre-commit": [
-    "ts.check",
-    "build",
-    "add-build"
-  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
