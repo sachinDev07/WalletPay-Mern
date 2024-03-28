@@ -2,13 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.ts",
+  "main": "index.ts",
   "scripts": {
-    "start": "nodemon src/index.ts",
-    "build": "rimraf dist && tsc",
-    "ts.check": "tsc --project tsconfig.json",
-    "add-build": "git add dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.ts",
+    "server": "ts-node ./index.ts",
+    "client": "cd ./ && npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "pre-commit": [
     "ts.check",
