@@ -9,6 +9,7 @@ import infoRoutes from "./routes/info-routes";
 import accountRoutes from "./routes/account-routes";
 import refreshTokenRoutes from "./routes/refreshToken-routes";
 import notificationRoutes from "./routes/notifications-routes";
+import path from "path";
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use(
   }),
 );
 app.use(cookieParser());
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 app.use("/api/v1", infoRoutes);
 app.use("/api/v1", userRoutes);
