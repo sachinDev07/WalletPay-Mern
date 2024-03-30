@@ -105,7 +105,7 @@ async function signin(req: Request, res: Response) {
     const expires = new Date(Date.now() + 60 * 60 * 1000);
     return res
       .status(200)
-      .cookie("refreshToken", refreshToken, {
+      .cookie("accessToken", accessToken, {
         path: "/",
         httpOnly: true,
         secure: true,

@@ -8,7 +8,7 @@ export interface JwtPayload {
 
 function verifyToken(token: string): JwtPayload {
   try {
-    return jwt.verify(token, ServerConfig.REFRESH_TOKEN_SECRET as string) as JwtPayload
+    return jwt.verify(token, ServerConfig.ACCESS_TOKEN_SECRET as string) as JwtPayload
   } catch (error) {
     console.error(error);
     throw error;

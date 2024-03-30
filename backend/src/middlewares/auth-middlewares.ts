@@ -9,15 +9,15 @@ async function checkAuth(
   next: NextFunction,
 ) {
   try {
-    const refreshToken =
-      (req.cookies?.refreshToken as string) ||
+    const accessToken =
+      (req.cookies?.accessToken as string) ||
       (req.header("Authorization")?.replace("Bearer ", "") as string);
 
-    if (!refreshToken) {
+    if (!accessToken) {
       return res.status(401).json({ error: "JWT Token is missing" });
     }
 
-    const response = await isAuthenticated(refreshToken);
+    const response = await isAuthenticated(accessToken);
 
     if (response instanceof Error) {
       return res.status(401).json({ error: "Unauthorized!" });
