@@ -88,16 +88,7 @@ async function signin(req: Request, res: Response) {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    const accessToken = jwt.sign(
-      { id: user._id, email: user.email },
-      ServerConfig.ACCESS_TOKEN_SECRET as string,
-      { expiresIn: ServerConfig.ACCESS_TOKEN_EXPIRY as string },
-    );
-    const refreshToken = jwt.sign(
-      { id: user._id, email: user.email },
-      ServerConfig.REFRESH_TOKEN_SECRET as string,
-      { expiresIn: ServerConfig.REFRESH_TOKEN_EXPIRY as string },
-    );
+    const { accessToken, refreshToken } = await Auth.generateAccessTokenAndRefreshToken(user);
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
