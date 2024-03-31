@@ -44,7 +44,7 @@ const SignUp = () => {
     try {
       startLoading();
       await axios.post<UserDetails>(
-        "http://localhost:7001/api/v1/users/signup",
+        "https://walletpay-mern.onrender.com/api/v1/users/signup",
         data,
       );
       clearError();
