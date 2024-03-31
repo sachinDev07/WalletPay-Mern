@@ -56,7 +56,7 @@ const SmallScreenNotificationMenu = ({
                   key={notification._id}
                   id={notification._id}
                   amount={notification?.amount}
-                  name={notification?.senderDetails.firstname}
+                  name={notification?.senderDetails?.firstname}
                   date={handleDate(notification?.createdAt)}
                   refreshNotifications={getNotifications}
                 />
@@ -68,7 +68,7 @@ const SmallScreenNotificationMenu = ({
                   alt="No new messages found"
                   className="mt-8"
                 />
-                <p className="text-center -mt-8">No messages are present</p>
+                <p className="text-center -mt-8 dark:text-white">No messages are present</p>
               </div>
             )}
           </div>

@@ -52,7 +52,7 @@ const NotificationModal = ({
                   key={notification._id}
                   id={notification._id}
                   amount={notification?.amount}
-                  name={notification?.senderDetails.firstname}
+                  name={notification?.senderDetails?.firstname}
                   date={handleDate(notification?.createdAt)}
                   refreshNotifications={getNotifications}
                 />

@@ -46,7 +46,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    setUsername(userDetails.firstname + " " + userDetails.lastname);
+    setUsername(userDetails?.firstname + " " + userDetails?.lastname);
   }, [setUsername, userDetails?.firstname, userDetails?.lastname]);
 
   return (

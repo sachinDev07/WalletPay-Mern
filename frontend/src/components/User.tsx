@@ -19,7 +19,7 @@ const User = ({ id, firstChar, firstName, lastName }: UserDetails) => {
     <div className="flex justify-between items-center mt-4">
       <div className="flex items-center">
         <CharacterLogo
-          character={firstChar.toUpperCase()}
+          character={firstChar?.toUpperCase()}
           width="w-10 md:w-12 mr-2"
           height="h-10 md:h-12"
           bgColor="bg-slate-200 dark:bg-white"
@@ -28,7 +28,7 @@ const User = ({ id, firstChar, firstName, lastName }: UserDetails) => {
         />
         <div className="flex flex-col justify-center h-full dark:text-white">
           <div>
-            {firstName.charAt(0).toUpperCase() + firstName.substring(1)}{" "}
+            {firstName?.charAt(0).toUpperCase() + firstName?.substring(1)}{" "}
             {lastName}
           </div>
         </div>

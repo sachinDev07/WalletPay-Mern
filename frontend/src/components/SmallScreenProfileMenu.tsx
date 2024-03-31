@@ -33,7 +33,7 @@ const SmallScreenProfileMenu = ({
       <div className="">
         <div className="flex flex-col items-center p-2">
           <CharacterLogo
-            character={username.charAt(0).toUpperCase()}
+            character={username?.charAt(0).toUpperCase()}
             width="w-16"
             height="h-16"
             bgColor="bg-slate-200 dark:bg-white"
