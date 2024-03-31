@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://walletpay-app.onrender.com/api/v1";
+const BASE_URL = "https://walletpay-mern.onrender.com/api/v1";
 
 
 export default axios.create({

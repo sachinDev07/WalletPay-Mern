@@ -44,7 +44,7 @@ const SignUp = () => {
     try {
       startLoading();
       await axios.post<UserDetails>(
-        "https://walletpay-app.onrender.com/v1/users/signup",
+        "https://walletpay-mern.onrender.com/v1/users/signup",
         data,
       );
       clearError();
