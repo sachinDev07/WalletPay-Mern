@@ -88,7 +88,12 @@ async function signin(req: Request, res: Response) {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    const { accessToken, refreshToken } = await Auth.generateAccessTokenAndRefreshToken(user);
+    const tokenPair = await Auth.generateAccessTokenAndRefreshToken(user);
+    if(!tokenPair) {
+      return res.status(404).json({message: "Failed to generate tokens!"});
+    }
+
+    const { accessToken, refreshToken } = tokenPair;
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });

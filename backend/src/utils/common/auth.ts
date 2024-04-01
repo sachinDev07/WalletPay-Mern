@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import ServerConfig from "../../config/server-config"
+import ServerConfig from "../../config/server-config";
 
 export interface JwtPayload {
   id: string;
@@ -11,36 +11,62 @@ interface UserType {
   email: string;
 }
 
+interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+}
+
 function verifyToken(token: string): JwtPayload {
   try {
-    return jwt.verify(token, ServerConfig.ACCESS_TOKEN_SECRET as string) as JwtPayload
+    return jwt.verify(
+      token,
+      ServerConfig.ACCESS_TOKEN_SECRET as string,
+    ) as JwtPayload;
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
 
-async function generateAccessTokenAndRefreshToken(user: UserType) {
-  try {
+async function generateAccessTokenAndRefreshToken(
+  user: UserType,
+): Promise<TokenPair> {
+  return new Promise((resolve, reject) => {
+    if (
+      !user ||
+      typeof user !== "object" ||
+      !("_id" in user) ||
+      !("email" in user)
+    ) {
+      reject(new Error("Invalid user object"));
+    }
+
+    try {
+      if (!ServerConfig.ACCESS_TOKEN_SECRET || !ServerConfig.ACCESS_TOKEN_EXPIRY) {
+        throw new Error("ACCESS_TOKEN_SECRET is not defined in ServerConfig");
+      }
+
+      if (!ServerConfig.REFRESH_TOKEN_SECRET || !ServerConfig.REFRESH_TOKEN_EXPIRY) {
+        throw new Error("REFRESH_TOKEN_SECRET is not defined in ServerConfig");
+      }
+
       const accessToken = jwt.sign(
         { id: user._id, email: user.email },
-        ServerConfig.ACCESS_TOKEN_SECRET as string,
-        { expiresIn: ServerConfig.ACCESS_TOKEN_EXPIRY as string },
+        ServerConfig.ACCESS_TOKEN_SECRET,
+        { expiresIn: ServerConfig.ACCESS_TOKEN_EXPIRY },
       );
       const refreshToken = jwt.sign(
         { id: user._id, email: user.email },
-        ServerConfig.REFRESH_TOKEN_SECRET as string,
-        { expiresIn: ServerConfig.REFRESH_TOKEN_EXPIRY as string },
+        ServerConfig.REFRESH_TOKEN_SECRET,
+        { expiresIn: ServerConfig.REFRESH_TOKEN_EXPIRY },
       );
 
-      return { accessToken, refreshToken};
-  } catch (error) {
-      console.error("ERROR: ", error);
-      throw error;
-  }
+      resolve({ accessToken, refreshToken });
+    } catch (error) {
+      console.error("Error generating tokens:", error);
+      reject(error);
+    }
+  });
 }
 
-export {
-  verifyToken,
-  generateAccessTokenAndRefreshToken,
-}
+export { verifyToken, generateAccessTokenAndRefreshToken };
