@@ -98,7 +98,7 @@ async function signin(req: Request, res: Response) {
       .status(200)
       .cookie("refreshToken", refreshToken, {
         path: "/",
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
         expires: expires,
         sameSite: "none",
