@@ -7,7 +7,8 @@ import ServerConfig from "../config/server-config";
 
 async function handleRefreshToken(req: Request, res: Response) {
   try {
-    const incomingRefreshToken = req.cookies.refreshToken;
+    const incomingRefreshToken = req.cookies.refreshToken as string;
+
     if (!incomingRefreshToken) {
       return res.status(401).json({ message: "Unauthorized acesss!" });
     }

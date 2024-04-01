@@ -88,12 +88,7 @@ async function signin(req: Request, res: Response) {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    const tokenPair = await Auth.generateAccessTokenAndRefreshToken(user);
-    if(!tokenPair) {
-      return res.status(404).json({message: "Failed to generate tokens!"});
-    }
-
-    const { accessToken, refreshToken } = tokenPair;
+    const { accessToken, refreshToken } = await Auth.generateAccessTokenAndRefreshToken(user);
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
@@ -102,14 +97,6 @@ async function signin(req: Request, res: Response) {
     return res
       .status(200)
       .cookie("refreshToken", refreshToken, {
-        path: "/",
-        httpOnly: true,
-        secure: true,
-        expires: expires,
-        sameSite: "none",
-        domain: "localhost",
-      })
-      .cookie("accessToken", accessToken, {
         path: "/",
         httpOnly: true,
         secure: true,
