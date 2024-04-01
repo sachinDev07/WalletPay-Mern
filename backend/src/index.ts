@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:7001",
+    origin: "https://wallet-pay.vercel.app",
     credentials: true,
   }),
 );
