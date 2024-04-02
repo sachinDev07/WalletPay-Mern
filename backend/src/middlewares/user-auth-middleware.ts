@@ -1,0 +1,34 @@
+import { NextFunction, Request, Response } from "express";
+import zod from "zod";
+
+const userSignUpSchema = zod.object({
+  firstname: zod
+    .string()
+    .min(3, { message: "firstname must be 3 or more characters long" }),
+  lastname: zod
+    .string()
+    .min(3, { message: "lastname must be 3 or more characters long" }),
+  email: zod.string().email({ message: "Invalid email address" }),
+  password: zod
+    .string()
+    .min(5, { message: "password must be 5 or more characters long" }),
+});
+
+function validateSignUpRequest(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    userSignUpSchema.parse(req.body);
+    next();
+  } catch (error) {
+    if (error instanceof zod.ZodError) {
+      res.status(400).json({ message: error.errors[0].message });
+    }
+  }
+}
+
+export { 
+  validateSignUpRequest,
+ };
