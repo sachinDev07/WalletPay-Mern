@@ -9,18 +9,6 @@ import { CustomRequest } from "../custome";
 import Account from "../model/account";
 import ServerConfig from "../config/server-config";
 
-const userUpdateSchema = zod.object({
-  firstname: zod
-    .string()
-    .min(3, { message: "First name must be 3 or more characters long" }),
-  lastname: zod.string(),
-  oldPassword: zod
-    .string()
-    .min(5, { message: "Old password must be 5 or more characters long" }),
-  newPassword: zod
-    .string()
-    .min(5, { message: "New password must be 5 or more characters long" }),
-});
 
 async function signup(req: Request, res: Response) {
   try {
@@ -129,21 +117,19 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
       return res.status(404).json({ message: "User id not found" });
     }
 
-    const validateUserData = userUpdateSchema.parse(req.body);
-
     const foundUser = await User.findById({ _id: userId });
     if (!foundUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const passwordMatch = foundUser.isPasswordCorrect(
-      validateUserData.oldPassword,
+      req.body.oldPassword,
     );
     if (!passwordMatch) {
       return res.status(400).json({ message: "Old password is wrong" });
     }
 
-    const { firstname, lastname, newPassword } = validateUserData;
+    const { firstname, lastname, newPassword } = req.body;
 
     const newDecodePassword = bcrypt.hashSync(
       newPassword,
