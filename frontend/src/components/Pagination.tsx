@@ -6,7 +6,7 @@ const Pagination = () => {
   const { page, totalPages } = useAppSelector((store) => store.pagination);
   const dispatch = useAppDispatch();
   return (
-    <div className="absolute w-[250px] right-1/2 left-1/2 -translate-x-1/2 bottom-[15%] flex items-center justify-center gap-2">
+    <div className="absolute w-[250px] right-1/2 left-1/2 -translate-x-1/2 bottom-[10%] flex items-center justify-center gap-2">
       <FaLessThan
         onClick={() => dispatch(prevButton())}
         className={`${

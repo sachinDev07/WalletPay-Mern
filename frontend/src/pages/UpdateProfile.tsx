@@ -45,11 +45,7 @@ const UpdateProfile = () => {
     clearError();
     try {
       startLoading();
-      await axios.put(
-        "/users/update",
-        data,
-       
-      );
+      await axios.put("/users/update", data);
       clearError();
       navigate("/login");
     } catch (error) {
@@ -71,7 +67,7 @@ const UpdateProfile = () => {
   };
 
   return (
-    <section className="mt-8 p-4 flex flex-col justify-center items-center">
+    <section className="mt-6 p-4 flex flex-col justify-center items-center">
       <div className="w-full md:max-w-[500px]">
         <p className="text-center text-lg font-bold underline dark:text-white">
           Update Your Profile

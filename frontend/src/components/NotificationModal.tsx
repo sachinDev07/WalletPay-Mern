@@ -58,7 +58,9 @@ const NotificationModal = ({
                 />
               ))
             ) : (
-              <p>No messages are present</p>
+              <p className="dark:text-center dark:text-white">
+                No messages are present
+              </p>
             )}
           </div>
         </div>

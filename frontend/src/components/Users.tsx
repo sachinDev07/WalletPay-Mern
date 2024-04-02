@@ -55,7 +55,7 @@ export const Users = () => {
       }
     };
 
-    const timeOutId = setTimeout(() => getUsers(filter), 400);
+    const timeOutId = setTimeout(() => getUsers(filter), 200);
 
     return () => {
       clearTimeout(timeOutId);
