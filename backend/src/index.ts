@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ServerConfig.FRONTEND_URL,
     credentials: true,
   }),
 );
@@ -34,7 +34,7 @@ app.use("/api/v1", notificationRoutes);
 connectDB()
   .then(() => {
     console.log("Database connected successfully!");
-    app.listen(ServerConfig.PORT, () => {
+    app.listen(+ServerConfig.PORT, () => {
       console.log("Server is up on port: ", ServerConfig.PORT);
     });
   })
