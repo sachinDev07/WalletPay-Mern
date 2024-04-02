@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import zod from "zod";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 import User from "../model/user";
@@ -8,13 +8,6 @@ import * as Auth from "../utils/common/auth";
 import { CustomRequest } from "../custome";
 import Account from "../model/account";
 import ServerConfig from "../config/server-config";
-
-const userSignInSchema = zod.object({
-  email: zod.string().email({ message: "Invalid email address" }),
-  password: zod
-    .string()
-    .min(5, { message: "Must be 5 or more characters long" }),
-});
 
 const userUpdateSchema = zod.object({
   firstname: zod
@@ -57,15 +50,14 @@ async function signup(req: Request, res: Response) {
 
 async function signin(req: Request, res: Response) {
   try {
-    const validatedUserData = userSignInSchema.parse(req.body);
-    const user = await User.findOne({ email: validatedUserData.email });
+    const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return res
         .status(404)
         .json({ message: "User not found for the given email" });
     }
 
-    const passwordMatch = user.isPasswordCorrect(validatedUserData.password);
+    const passwordMatch = user.isPasswordCorrect(req.body.password);
     if (!passwordMatch) {
       return res.status(400).json({ message: "Invalid password" });
     }
