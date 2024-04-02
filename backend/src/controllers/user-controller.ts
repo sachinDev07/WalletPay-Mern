@@ -102,6 +102,12 @@ async function signin(req: Request, res: Response) {
         expires: expires,
         sameSite: "none",
       })
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true,
+        expires: expires,
+        sameSite: "none",
+      })
       .json({
         accessToken: accessToken,
         id: user._id,

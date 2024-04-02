@@ -20,7 +20,7 @@ function verifyToken(token: string): JwtPayload {
   try {
     return jwt.verify(
       token,
-      ServerConfig.REFRESH_TOKEN_SECRET as string,
+      ServerConfig.ACCESS_TOKEN_SECRET as string,
     ) as JwtPayload;
   } catch (error) {
     console.error(error);
@@ -32,15 +32,6 @@ async function generateAccessTokenAndRefreshToken(
   user: UserType,
 ): Promise<TokenPair> {
   return new Promise((resolve, reject) => {
-    if (
-      !user ||
-      typeof user !== "object" ||
-      !("_id" in user) ||
-      !("email" in user)
-    ) {
-      reject(new Error("Invalid user object"));
-    }
-
     try {
       if (!ServerConfig.ACCESS_TOKEN_SECRET || !ServerConfig.ACCESS_TOKEN_EXPIRY) {
         throw new Error("ACCESS_TOKEN_SECRET is not defined in ServerConfig");
