@@ -6,6 +6,7 @@ import Spinner from "../components/Spinner";
 import useLoader from "../hooks/useLoader";
 import axios from "../api/axios";
 import { ValidationError } from "../types";
+import { useToast } from "../context/ToastContext";
 
 type UpdateProfileData = {
   firstname: string;
@@ -31,13 +32,15 @@ const UpdateProfile = () => {
   } = useLoader();
 
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const onSubmit = async (data: UpdateProfileData) => {
     clearError();
     try {
       startLoading();
-      await axios.put("/users/update", data);
+      const response = await axios.put("/users/update", data);
       clearError();
+      showToast({ message: response.data.message, type: "SUCCESS" });
       navigate("/login");
     } catch (error) {
       if (Axios.isAxiosError<ValidationError>(error)) {

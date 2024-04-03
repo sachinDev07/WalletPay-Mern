@@ -5,6 +5,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
 import { ValidationError } from "../types";
+import { useToast } from "../context/ToastContext";
 
 type ResponseType = {
   message: string;
@@ -26,15 +27,17 @@ export const SendMoney = () => {
   } = useLoader();
 
   const [amount, setAmount] = useState<number>(0);
+  const { showToast } = useToast();
 
   const handleAmount = async () => {
     try {
       startLoading();
-      await axiosPrivate.post<ResponseType>("/account/transfer", {
+      const response = await axiosPrivate.post<ResponseType>("/account/transfer", {
         amount,
         to: id,
       });
       clearError();
+      showToast({ message: response.data.message, type: "SUCCESS"})
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError<ValidationError>(error)) {

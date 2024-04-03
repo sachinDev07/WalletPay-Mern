@@ -9,7 +9,7 @@ import { AuthProvider } from "./context/AuthProvider.tsx";
 import { Provider } from "react-redux";
 import { NotificationProvider } from "./context/NotificationProvider.tsx";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
-
+import { ToastContextProvider } from "./context/ToastContext.tsx";
 
 if (process.env.NODE_ENV === "production") disableReactDevTools();
 
@@ -18,13 +18,15 @@ root.render(
   <AuthProvider>
     <Provider store={store}>
       <NotificationProvider>
-        <RecoilRoot>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/*" element={<App />} />
-            </Routes>
-          </BrowserRouter>
-        </RecoilRoot>
+        <ToastContextProvider>
+          <RecoilRoot>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/*" element={<App />} />
+              </Routes>
+            </BrowserRouter>
+          </RecoilRoot>
+        </ToastContextProvider>
       </NotificationProvider>
     </Provider>
   </AuthProvider>,

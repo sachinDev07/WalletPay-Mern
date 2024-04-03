@@ -11,6 +11,7 @@ import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
 import { BASE_URL } from "../api/axios";
 import { ValidationError } from "../types";
+import { useToast } from "../context/ToastContext";
 
 type FormData = {
   email: string;
@@ -31,6 +32,7 @@ const SignIn = () => {
   const { isLoading, startLoading, stopLoading, isError, setError, clearError } = useLoader();
   const { setAuth, persist, setPersist } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const {
     register,
     handleSubmit,
@@ -67,6 +69,7 @@ const SignIn = () => {
         }),
       );
       clearError();
+      showToast({ message: message, type: "SUCCESS"})
       navigate("/", { replace: true });
     } catch (error) {
       if (axios.isAxiosError<ValidationError>(error)) {
