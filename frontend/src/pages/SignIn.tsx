@@ -9,6 +9,8 @@ import useAuth from "../hooks/useAuth";
 import { useEffect } from "react";
 import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
+import { BASE_URL } from "../api/axios";
+import { ValidationError } from "../types";
 
 type FormData = {
   email: string;
@@ -23,16 +25,6 @@ interface UserDetails {
   email: string;
   message: string;
   accessToken: string;
-}
-
-interface ErrorDetailsType {
-  message: string;
-}
-
-interface ValidationError {
-  message: string;
-  errors: Record<string, string[]>;
-  error: ErrorDetailsType[];
 }
 
 const SignIn = () => {
@@ -56,7 +48,7 @@ const SignIn = () => {
     try {
       startLoading();
       const response = await axios.post<UserDetails>(
-        "https://walletpay-mern.onrender.com/api/v1/users/signin",
+        `${BASE_URL}/users/signin`,
         data,
         options,
       );

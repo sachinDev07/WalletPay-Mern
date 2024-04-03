@@ -4,18 +4,11 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
+import { ValidationError } from "../types";
 
 type ResponseType = {
   message: string;
 };
-
-interface ValidationError {
-  error: {
-    message: string;
-  }[];
-  message: string;
-  errors: Record<string, string[]>;
-}
 
 export const SendMoney = () => {
   const [searchParams] = useSearchParams();
