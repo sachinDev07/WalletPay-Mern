@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { CookieOptions, Request, Response } from "express";
 import zod from "zod";
 import { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -8,7 +8,7 @@ import * as Auth from "../utils/common/auth";
 import { CustomRequest } from "../custome";
 import Account from "../model/account";
 import ServerConfig from "../config/server-config";
-
+import { options } from "../constant";
 
 async function signup(req: Request, res: Response) {
   try {
@@ -50,26 +50,16 @@ async function signin(req: Request, res: Response) {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    const { accessToken, refreshToken } = await Auth.generateAccessTokenAndRefreshToken(user);
+    const { accessToken, refreshToken } =
+      await Auth.generateAccessTokenAndRefreshToken(user);
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
 
-    const expires = new Date(Date.now() + 60 * 60 * 1000);
     return res
       .status(200)
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        expires: expires,
-        sameSite: "none",
-      })
-      .cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true,
-        expires: expires,
-        sameSite: "none",
-      })
+      .cookie("refreshToken", refreshToken, options)
+      .cookie("accessToken", accessToken, options)
       .json({
         accessToken: accessToken,
         id: user._id,
@@ -80,10 +70,6 @@ async function signin(req: Request, res: Response) {
         message: "User logged In Successfully",
       });
   } catch (error) {
-    if (error instanceof zod.ZodError) {
-      return res.status(400).json({ error: error.errors });
-    }
-
     console.error(error);
     return res.status(500).json({ error: "Something went wrong!" });
   }
@@ -122,9 +108,7 @@ async function updateUserInformation(req: CustomRequest, res: Response) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const passwordMatch = foundUser.isPasswordCorrect(
-      req.body.oldPassword,
-    );
+    const passwordMatch = foundUser.isPasswordCorrect(req.body.oldPassword);
     if (!passwordMatch) {
       return res.status(400).json({ message: "Old password is wrong" });
     }
@@ -242,6 +226,7 @@ async function logOutUser(req: CustomRequest, res: Response) {
   const refreshToken =
     (req.cookies?.refreshToken as string) ||
     (req.header("Authorization")?.replace("Bearer ", "") as string);
+
   try {
     if (!refreshToken) {
       return res.status(204).json({ message: "No content found!" });
@@ -261,11 +246,9 @@ async function logOutUser(req: CustomRequest, res: Response) {
 
     await foundUser.save();
 
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
+    res
+      .clearCookie("refreshToken", options)
+      .clearCookie("accessToken", options);
     return res.json({ message: "Successfully log out " });
   } catch (error) {
     console.error(error);
