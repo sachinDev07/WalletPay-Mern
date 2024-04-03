@@ -5,6 +5,7 @@ import * as Axios from "axios";
 import Spinner from "../components/Spinner";
 import useLoader from "../hooks/useLoader";
 import axios from "../api/axios";
+import { ValidationError } from "../types";
 
 type UpdateProfileData = {
   firstname: string;
@@ -12,16 +13,6 @@ type UpdateProfileData = {
   oldPassword: string;
   newPassword: string;
 };
-
-interface ErrorDetailsType {
-  message: string;
-}
-
-interface ValidationError {
-  message: string;
-  errors: Record<string, string[]>;
-  error: ErrorDetailsType[];
-}
 
 const UpdateProfile = () => {
   const {

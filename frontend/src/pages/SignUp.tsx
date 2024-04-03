@@ -7,6 +7,8 @@ import SubHeading from "../components/SubHeading";
 import BottomWarning from "../components/BottomWarning";
 import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
+import { BASE_URL } from "../api/axios";
+import { ValidationError } from "../types";
 
 type FormData = {
   firstname: string;
@@ -20,19 +22,15 @@ interface UserDetails {
   message: string;
 }
 
-interface ErrorDetailsType {
-  message: string;
-}
-
-interface ValidationError {
-  message: string;
-  errors: Record<string, string[]>;
-  error: ErrorDetailsType[];
-}
-
 const SignUp = () => {
-  const { isLoading, startLoading, stopLoading, isError, setError, clearError } =
-    useLoader();
+  const {
+    isLoading,
+    startLoading,
+    stopLoading,
+    isError,
+    setError,
+    clearError,
+  } = useLoader();
   const navigate = useNavigate();
   const {
     register,
@@ -43,10 +41,7 @@ const SignUp = () => {
   const onSubmit = async (data: FormData) => {
     try {
       startLoading();
-      await axios.post<UserDetails>(
-        "https://walletpay-xsap.onrender.com/api/v1/users/signup",
-        data,
-      );
+      await axios.post<UserDetails>(`${BASE_URL}/users/signup`, data);
       clearError();
       navigate("/login");
     } catch (error) {
