@@ -10,10 +10,10 @@ router.post("/users/signup", validateSignUpRequest, UserController.signup);
 
 router.post("/users/signin", validateSignInRequest, UserController.signin);
 
-router.put("/users/update", validateUserUpdateInfoRequest, UserController.updateUserInformation);
+router.put("/users/update", checkAuth, validateUserUpdateInfoRequest, UserController.updateUserInformation);
 
-router.get("/users", UserController.getUsers);
+router.get("/users", checkAuth, UserController.getUsers);
 
-router.post("/users/logout", UserController.logOutUser);
+router.post("/users/logout", checkAuth, UserController.logOutUser);
 
 export default router;

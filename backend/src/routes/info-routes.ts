@@ -5,7 +5,7 @@ import { checkAuth } from "../middlewares/auth-middlewares";
 
 const router = express.Router();
 
-router.get("/info"
+router.get("/info", checkAuth
 , InfoController.info);
 
 export default router;
