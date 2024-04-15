@@ -43,7 +43,14 @@ const SignUp = () => {
   const onSubmit = async (data: FormData) => {
     try {
       startLoading();
-      const response = await axios.post<UserDetails>(`${BASE_URL}/users/signup`, data);
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      };
+      const response = await axios.post<UserDetails>(`${BASE_URL}/users/signup`, data, options);
       showToast({ message: response.data.message, type: "SUCCESS"});
       clearError();
       navigate("/login");

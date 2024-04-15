@@ -1,28 +1,25 @@
-import axios from "../api/axios";
-
-import useAuth from "./useAuth";
+// import axios from "../api/axios";
 
 
-const useLogout = () => {
-  const { setAuth } = useAuth();
+// const useLogout = () => {
   
-  const logout = async () => {
-    setAuth({
-      id: "",
-      role: "",
-      firstname: "",
-      lastname: "",
-      accessToken: "",
-      message: "",
-    });
-    try {
-      await axios.post("/users/logout",{});
-    } catch (error) {
-      console.error(error);
-    }
-  };
+//   const logout = async () => {
+//     setAuth({
+//       id: "",
+//       role: "",
+//       firstname: "",
+//       lastname: "",
+//       accessToken: "",
+//       message: "",
+//     });
+//     try {
+//       await axios.post("/users/logout",{});
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
 
-  return logout;
-};
+//   return logout;
+// };
 
-export default useLogout;
+// export default useLogout;

@@ -38,7 +38,14 @@ const UpdateProfile = () => {
     clearError();
     try {
       startLoading();
-      const response = await axios.put("/users/update", data);
+      const options = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      };
+      const response = await axios.put("/users/update", data, options);
       clearError();
       showToast({ message: response.data.message, type: "SUCCESS" });
       navigate("/login");

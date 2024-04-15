@@ -20,7 +20,7 @@ const ThemeBtn = () => {
       <input
         type="checkbox"
         value=""
-        className="sr-only" // what this class means
+        className="sr-only"
         onChange={onChangeBtn}
         checked={themeMode === "dark"}
       />
