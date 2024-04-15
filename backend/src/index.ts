@@ -9,7 +9,6 @@ import accountRoutes from "./routes/account-routes";
 import refreshTokenRoutes from "./routes/refreshToken-routes";
 import notificationRoutes from "./routes/notifications-routes";
 import path from "path";
-import serverConfig from "./config/server-config";
 import mongoose from "mongoose";
 
 const app = express();
@@ -33,7 +32,7 @@ app.use("/api/v1", refreshTokenRoutes);
 app.use("/api/v1", notificationRoutes);
 
 mongoose
-  .connect(serverConfig.MONGODB_URI as string)
+  .connect(ServerConfig.MONGODB_URI as string)
   .then(() => {
     console.log("Database connected successfully!");
     app.listen(+ServerConfig.PORT || 7000, () => {
