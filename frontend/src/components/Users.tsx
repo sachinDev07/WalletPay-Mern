@@ -7,7 +7,7 @@ import SearchBarSkeleton from "./Skeleton/SearchBarSkeleton";
 import Pagination from "./Pagination";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getTotalPages } from "../redux/paginationSlice";
-import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface User {
   _id: string;
@@ -20,6 +20,7 @@ export const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const axiosPrivate = useAxiosPrivate();
 
   const page = useAppSelector((store) => store.pagination.page);
   const dispatch = useAppDispatch();
@@ -35,7 +36,7 @@ export const Users = () => {
           return;
         }
 
-        const response = await axios.get<{
+        const response = await axiosPrivate.get<{
           totalUsers: number;
           data: User[];
         }>(
@@ -61,7 +62,7 @@ export const Users = () => {
       isMounted = false;
       controller.abort();
     };
-  }, [filter, page, dispatch]);
+  }, [filter, page, axiosPrivate, dispatch]);
 
   if (loading) {
     return (

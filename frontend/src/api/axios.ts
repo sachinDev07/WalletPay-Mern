@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export const BASE_URL = "https://walletpay-lgaj.onrender.com/api/v1";
 
 
 export default axios.create({

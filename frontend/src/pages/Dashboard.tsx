@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 
 import Balance from "../components/Balance";
 import Users from "../components/Users";
-import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const Dashboard = () => {
   const [balance, setBalance] = useState<number | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const axiosPrivate = useAxiosPrivate();
 
   async function getUserBalanceApi() {
     try {
-      const response = await axios.get<{
+      const response = await axiosPrivate.get<{
         balance: number;
         message: string;
       }>("/account/balance");
