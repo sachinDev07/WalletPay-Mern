@@ -34,7 +34,7 @@ app.use("/api/v1", notificationRoutes);
 connectDB()
   .then(() => {
     console.log("Database connected successfully!");
-    app.listen(+ServerConfig.PORT, () => {
+    app.listen(+ServerConfig.PORT || 7000, () => {
       console.log("Server is up on port: ", ServerConfig.PORT);
     });
   })
