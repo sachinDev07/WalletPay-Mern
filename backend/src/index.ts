@@ -3,13 +3,14 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import ServerConfig from "./config/server-config";
-import connectDB from "./db/db";
 import userRoutes from "./routes/user-routes";
 import infoRoutes from "./routes/info-routes";
 import accountRoutes from "./routes/account-routes";
 import refreshTokenRoutes from "./routes/refreshToken-routes";
 import notificationRoutes from "./routes/notifications-routes";
 import path from "path";
+import serverConfig from "./config/server-config";
+import mongoose from "mongoose";
 
 const app = express();
 
@@ -31,7 +32,8 @@ app.use("/api/v1", accountRoutes);
 app.use("/api/v1", refreshTokenRoutes);
 app.use("/api/v1", notificationRoutes);
 
-connectDB()
+mongoose
+  .connect(serverConfig.MONGODB_URI as string)
   .then(() => {
     console.log("Database connected successfully!");
     app.listen(+ServerConfig.PORT || 7000, () => {
