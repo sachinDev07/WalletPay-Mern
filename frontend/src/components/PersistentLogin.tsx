@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 import useRefreshToken from "../hooks/userRefreshToken";
 import useAuth from "../hooks/useAuth";
-import Spinner from "./Spinner";
+// import Spinner from "./Spinner";
 
 const PersistLogin = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
   const { auth, persist } = useAuth();
 
