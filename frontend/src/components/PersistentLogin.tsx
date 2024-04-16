@@ -30,7 +30,7 @@ const PersistLogin = () => {
   }, []);
 
   return (
-    <>{!persist ? <Outlet /> : isLoading ? <Spinner /> : <Outlet />}</>
+    <>{!persist ? <Outlet /> : <Outlet />}</>
   );
 };
 
