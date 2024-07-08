@@ -51,7 +51,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="shadow h-14 px-4 md:px-28 flex justify-between items-center dark:shadow-slate-400">
+      <header className="shadow h-14 px-4 md:px-28 flex justify-between items-center dark:shadow-slate-400 border-b-2 border-slate-400">
         <div className="text-xl font-bold hover:scale-105 transition duration-150 ease-in-out dark:text-white">
           <Link to="/">WalletPay</Link>
         </div>
