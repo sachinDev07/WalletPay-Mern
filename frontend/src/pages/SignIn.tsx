@@ -1,36 +1,24 @@
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import BottomWarning from "../components/BottomWarning";
 import Heading from "../components/Heading";
 import SubHeading from "../components/SubHeading";
-import useAuth from "../hooks/useAuth";
-import { useEffect } from "react";
 import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
-import { BASE_URL } from "../api/axios";
-import { ValidationError } from "../types";
 import { useToast } from "../context/ToastContext";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../redux/store";
+import { signin } from "../redux/authSlice";
 
 type FormData = {
   email: string;
   password: string;
 };
 
-interface UserDetails {
-  id: string;
-  firstname: string;
-  lastname: string;
-  role: string;
-  email: string;
-  message: string;
-  accessToken: string;
-}
 
 const SignIn = () => {
   const { isLoading, startLoading, stopLoading, isError, setError, clearError } = useLoader();
-  const { setAuth, persist, setPersist } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const {
@@ -39,63 +27,27 @@ const SignIn = () => {
     formState: { errors },
   } = useForm<FormData>();
 
+  const dispatch = useDispatch<AppDispatch>();
+
+
   const onSubmit = async (data: FormData) => {
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    };
-    try {
-      startLoading();
-      const response = await axios.post<UserDetails>(
-        `${BASE_URL}/users/signin`,
-        data,
-        options,
-      );
-
-      const { id, firstname, lastname, email, role, accessToken, message } =
-        response.data;
-
-      setAuth({ id, firstname, lastname, role, accessToken, message });
-      localStorage.setItem("id", id);
-      localStorage.setItem(
-        "userDetails",
-        JSON.stringify({
-          firstname: firstname,
-          lastname: lastname,
-          email: email,
-        }),
-      );
+    startLoading();
+    const resultAction = await dispatch(signin(data));
+    if (signin.fulfilled.match(resultAction)) {
       clearError();
-      showToast({ message: message, type: "SUCCESS"})
-      navigate("/", { replace: true });
-    } catch (error) {
-      if (axios.isAxiosError<ValidationError>(error)) {
-        if (error.response) {
-          if (error.response.data.message) {
-            setError(error.response.data.message);
-          } else if (error.response.data.error[0].message) {
-            setError(error.response.data.error[0].message);
-          }
-        }
-      } else {
-        setError("An error occurred");
+      showToast({ message: resultAction.payload.message, type: "SUCCESS" });
+      navigate("/");
+    } else {
+      if (resultAction.payload) {
+        setError(resultAction.payload);
+        stopLoading();
       }
-      console.error(error);
-    } finally {
-      stopLoading();
     }
   };
 
-  const togglePersist = () => {
-    setPersist((prev) => !prev);
+  const handleFocus = () => {
+    clearError();
   };
-
-  useEffect(() => {
-    localStorage.setItem("persist", persist.toString());
-  }, [persist]);
 
   return (
     <div className="bg-slate-300 h-screen flex justify-center">
@@ -114,6 +66,7 @@ const SignIn = () => {
                   type="email"
                   placeholder="Enter your email address"
                   className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                  onFocus={handleFocus}
                 />
               </label>
             </div>
@@ -130,24 +83,13 @@ const SignIn = () => {
                   type="password"
                   placeholder="Enter your password"
                   className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                  onFocus={handleFocus}
                 />
               </label>
             </div>
             {errors.password && (
               <span className="text-red-500">{errors.password.message}</span>
             )}
-            <div className="ml-[1px] space-x-1 flex items-center">
-              <input
-                type="checkbox"
-                id="persist"
-                onChange={togglePersist}
-                checked={persist}
-                className="mt-1"
-              />
-              <div>
-                <label htmlFor="persist">Trust this device ?</label>
-              </div>
-            </div>
             {isError && (
               <p className="w-full mt-4 text-red-400 text-center">{isError}</p>
             )}

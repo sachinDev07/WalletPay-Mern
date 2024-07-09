@@ -4,7 +4,6 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import store from "./redux/store.ts";
-import { AuthProvider } from "./context/AuthProvider.tsx";
 import { Provider } from "react-redux";
 import { NotificationProvider } from "./context/NotificationProvider.tsx";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
@@ -48,7 +47,6 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
-  <AuthProvider>
     <Provider store={store}>
       <NotificationProvider>
         <ToastContextProvider>
@@ -56,5 +54,4 @@ root.render(
         </ToastContextProvider>
       </NotificationProvider>
     </Provider>
-  </AuthProvider>,
 );

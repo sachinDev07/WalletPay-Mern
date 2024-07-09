@@ -28,6 +28,11 @@ export type SignUpResponse = {
     message: string;
 };
 
+export type SignInRequesPayload = {
+  email: string;
+  password: string;
+}
+
 export type SignInResponse = {
   token: string;
   user: {
@@ -37,4 +42,5 @@ export type SignInResponse = {
     lastname: string;
     email: string;
   };
+  message: string;
 };
