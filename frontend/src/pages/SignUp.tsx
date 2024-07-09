@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import Heading from "../components/Heading";
@@ -7,21 +6,11 @@ import SubHeading from "../components/SubHeading";
 import BottomWarning from "../components/BottomWarning";
 import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
-import { BASE_URL } from "../api/axios";
-import { ValidationError } from "../types";
+import { FormData } from "../types";
 import { useToast } from "../context/ToastContext";
-
-type FormData = {
-  firstname: string;
-  lastname: string;
-  email: string;
-  password: string;
-};
-
-interface UserDetails {
-  data: FormData;
-  message: string;
-}
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../redux/store";
+import { signup } from "../redux/authSlice";
 
 const SignUp = () => {
   const {
@@ -33,36 +22,33 @@ const SignUp = () => {
     clearError,
   } = useLoader();
   const navigate = useNavigate();
-  const { showToast } = useToast();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
 
+  const { showToast } = useToast();
+
+  const dispatch = useDispatch<AppDispatch>();
+
   const onSubmit = async (data: FormData) => {
-    try {
-      startLoading();
-      const response = await axios.post<UserDetails>(`${BASE_URL}/users/signup`, data);
-      showToast({ message: response.data.message, type: "SUCCESS"});
+    startLoading();
+    const resultAction = await dispatch(signup(data));
+    if (signup.fulfilled.match(resultAction)) {
       clearError();
+      showToast({ message: resultAction.payload.message, type: "SUCCESS" });
       navigate("/login");
-    } catch (error) {
-      if (axios.isAxiosError<ValidationError>(error)) {
-        if (error.response) {
-          if (error.response.data.message) {
-            setError(error.response.data.message);
-          } else if (error.response.data.error[0].message) {
-            setError(error.response.data.error[0].message);
-          }
-        }
-      } else {
-        setError("An error occurred");
+    } else {
+      if (resultAction.payload) {
+        setError(resultAction.payload);
+        stopLoading();
       }
-      console.error(error);
-    } finally {
-      stopLoading();
     }
+  };
+
+  const handleFocus = () => {
+    clearError();
   };
 
   return (
@@ -82,6 +68,7 @@ const SignUp = () => {
                   })}
                   placeholder="First name"
                   className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                  onFocus={handleFocus}
                 />
               </label>
             </div>
@@ -98,6 +85,7 @@ const SignUp = () => {
                   })}
                   placeholder="Last name"
                   className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                  onFocus={handleFocus}
                 />
               </label>
             </div>
@@ -112,6 +100,7 @@ const SignUp = () => {
                   {...register("email", { required: "This field is required" })}
                   placeholder="Enter your email address"
                   className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                  onFocus={handleFocus}
                 />
               </label>
             </div>
@@ -128,6 +117,7 @@ const SignUp = () => {
                   })}
                   placeholder="Enter your password"
                   className="block w-full  px-2 py-1 border border-slate-200 rounded"
+                  onFocus={handleFocus}
                 />
               </label>
             </div>

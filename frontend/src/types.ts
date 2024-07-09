@@ -9,3 +9,32 @@ export interface ValidationError {
   message: string;
   errors: Record<string, string[]>;
 }
+
+export type FormData = {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+};
+
+export type UserDetails = {
+  message: string;
+};
+
+export type SignUpRequestPayload = FormData;
+
+export type SignUpResponse = {
+    success: boolean;
+    message: string;
+};
+
+export type SignInResponse = {
+  token: string;
+  user: {
+    id: string;
+    role: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+  };
+};
