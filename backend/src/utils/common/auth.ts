@@ -20,7 +20,7 @@ function verifyToken(token: string): JwtPayload {
   try {
     return jwt.verify(
       token,
-      ServerConfig.ACCESS_TOKEN_SECRET as string,
+      ServerConfig.SECRET_TOKEN as string,
     ) as JwtPayload;
   } catch (error) {
     console.error(error);

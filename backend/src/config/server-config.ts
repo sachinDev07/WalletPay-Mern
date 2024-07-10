@@ -11,6 +11,8 @@ interface ServerConfig {
   REFRESH_TOKEN_SECRET: string;
   REFRESH_TOKEN_EXPIRY: string;
   FRONTEND_URL: string;
+  SECRET_TOKEN: string;
+  SECRET_TOKEN_EXPIRY: string;
 }
 
 const serverConfig: ServerConfig = {
@@ -22,6 +24,8 @@ const serverConfig: ServerConfig = {
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || "",
   REFRESH_TOKEN_EXPIRY: process.env.REFRESH_TOKEN_EXPIRY || "",
   FRONTEND_URL: process.env.FRONTEND_URL || "",
+  SECRET_TOKEN: process.env.SECRET_TOKEN || "",
+  SECRET_TOKEN_EXPIRY: process.env.SECRET_TOKEN_EXPIRY || "",
 };
 
 export default serverConfig;

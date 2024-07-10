@@ -1,7 +1,9 @@
-import { CookieOptions, Request, Response } from "express";
+import { Request, Response } from "express";
 import zod from "zod";
 import { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+
+import jwt from "jsonwebtoken";
 
 import User from "../model/user";
 import * as Auth from "../utils/common/auth";
@@ -16,7 +18,7 @@ async function signup(req: Request, res: Response) {
     if (existedUser) {
       return res
         .status(400)
-        .json({ message: "User already exists with given email" });
+        .json({success: false, message: "User already exists with given email" });
     }
 
     const user = await User.create(req.body);
@@ -29,10 +31,10 @@ async function signup(req: Request, res: Response) {
 
     return res
       .status(200)
-      .json({ data: user, message: "User created successfully" });
+      .json({ success: true, message: "User created successfully" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Something went wrong!" });
+    return res.status(500).json({ success: false, message: "Something went wrong!" });
   }
 }
 
@@ -42,36 +44,37 @@ async function signin(req: Request, res: Response) {
     if (!user) {
       return res
         .status(404)
-        .json({ message: "User not found for the given email" });
+        .json({success: false, token: "", data: {}, message: "User not found for the given email" });
     }
 
     const passwordMatch = user.isPasswordCorrect(req.body.password);
     if (!passwordMatch) {
-      return res.status(400).json({ message: "Invalid password" });
+      return res.status(400).json({success: false, token: "", data: {}, message: "Invalid password" });
     }
 
-    const { accessToken, refreshToken } =
-      await Auth.generateAccessTokenAndRefreshToken(user);
-
-    user.refreshToken = refreshToken;
-    await user.save({ validateBeforeSave: false });
+    const token = jwt.sign(
+      { email: user.email, id: user._id },
+      ServerConfig.SECRET_TOKEN,
+      { expiresIn: ServerConfig.SECRET_TOKEN_EXPIRY },
+    );
 
     return res
       .status(200)
-      .cookie("refreshToken", refreshToken, options)
-      .cookie("accessToken", accessToken, options)
       .json({
-        accessToken: accessToken,
-        id: user._id,
-        role: user.role,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
+        success: true,
+        token: token,
+        data: {
+          id: user._id,
+          role: user.role,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+        },
         message: "User logged In Successfully",
       });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Something went wrong!" });
+    return res.status(500).json({success: false, token: "", data: {}, error: "Something went wrong!" });
   }
 }
 
