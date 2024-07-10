@@ -13,6 +13,8 @@ import SignIn from "./pages/SignIn.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import SendMoney from "./pages/SendMoney.tsx";
 import UpdateProfile from "./pages/UpdateProfile.tsx";
+import ShowProfileProvider from "./context/ShowProfileContext.tsx";
+import UserProfileModalProvider from "./context/UserProfileContext.tsx";
 
 if (process.env.NODE_ENV === "production") disableReactDevTools();
 
@@ -33,25 +35,29 @@ const router = createBrowserRouter([
         path: "/update-profile",
         element: <UpdateProfile />,
       },
-    ]
+    ],
   },
   {
-    path:"/signup",
-    element: <SignUp />
+    path: "/signup",
+    element: <SignUp />,
   },
   {
-    path:"/login",
-    element: <SignIn />
-  }
-])
+    path: "/login",
+    element: <SignIn />,
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
-    <Provider store={store}>
-      <NotificationProvider>
-        <ToastContextProvider>
+  <Provider store={store}>
+    <UserProfileModalProvider>
+      <ShowProfileProvider>
+        <NotificationProvider>
+          <ToastContextProvider>
             <RouterProvider router={router} />
-        </ToastContextProvider>
-      </NotificationProvider>
-    </Provider>
+          </ToastContextProvider>
+        </NotificationProvider>
+      </ShowProfileProvider>
+    </UserProfileModalProvider>
+  </Provider>,
 );

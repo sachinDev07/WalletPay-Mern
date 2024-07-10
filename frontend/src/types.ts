@@ -35,7 +35,7 @@ export type SignInRequesPayload = {
 
 export type SignInResponse = {
   token: string;
-  user: {
+  data: {
     id: string;
     role: string;
     firstname: string;

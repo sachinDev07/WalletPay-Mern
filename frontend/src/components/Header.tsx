@@ -1,11 +1,8 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { profileAtom } from "../atoms";
 import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa6";
 import { FaSignOutAlt } from "react-icons/fa";
 
-import useLogout from "../hooks/useLogout";
 import NotificationIcon from "./NotificationIcon";
 import CharacterLogo from "./CharacterLogo";
 import { UserProfileModalContext } from "../context/UserProfileContext";
@@ -14,6 +11,9 @@ import useMediaQuery from "../hooks/useMediaQuery";
 import SmallScreenProfileMenu from "./SmallScreenProfileMenu";
 import { ShowProfileContext } from "../context/ShowProfileContext";
 import ThemeBtn from "./ThemeBtn";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { logout } from "../redux/authSlice";
 
 interface UserDetailsType {
   firstname: string;
@@ -22,10 +22,10 @@ interface UserDetailsType {
 }
 
 const Header = () => {
-  const username = useRecoilValue(profileAtom);
-  const setUsername = useSetRecoilState(profileAtom);
+  const authState = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const logout = useLogout();
+  const username = authState.data.firstname + authState.data.lastname;
   const { userProfileToggle, setUserProfileToggle } = useContext(
     UserProfileModalContext,
   );
@@ -36,18 +36,10 @@ const Header = () => {
   const userDetailsString = localStorage.getItem("userDetails") as string;
   const userDetails: UserDetailsType = JSON.parse(userDetailsString);
 
-  const signOut = async () => {
-    try {
-      await logout();
-      navigate("/login");
-    } catch (error) {
-      console.log("Err: ", error);
-    }
-  };
-
-  useEffect(() => {
-    setUsername(userDetails?.firstname + " " + userDetails?.lastname);
-  }, [setUsername, userDetails?.firstname, userDetails?.lastname]);
+  function handleSignOut() {
+    dispatch(logout());
+    navigate("/login");
+  }
 
   return (
     <>
@@ -60,6 +52,7 @@ const Header = () => {
           <NotificationIcon />
           <button
             onClick={(e) => {
+              console.log("clicked");
               e.stopPropagation();
               setUserProfileToggle((prev) => !prev);
               setNotificationToggle(false);
@@ -67,13 +60,13 @@ const Header = () => {
             }}
             className="rounded-full h-7 w-7 md:h-8 md:w-8 bg-gray-200 hover:bg-gray-300 text-lg md:text-xl font-bold flex justify-center items-center cursor-pointer active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200 transition duration-150 ease-in-out"
           >
-            {username.charAt(0).toUpperCase()}
+            {username && username.charAt(0).toUpperCase()}
           </button>
           {isAboveMediumScreens && userProfileToggle && (
             <div className="absolute top-14 right-24 border-2 border-slate-400 rounded-md w-64 bg-white shadow-lg dark:bg-slate-800">
               <div className="flex flex-col items-center p-2">
                 <CharacterLogo
-                  character={username.charAt(0).toUpperCase()}
+                  character={username && username.charAt(0).toUpperCase()}
                   width="w-16"
                   height="h-16"
                   bgColor="bg-slate-200"
@@ -81,7 +74,7 @@ const Header = () => {
                   textSize="text-lg md:text-2xl"
                 />
                 <p className="mt-[4px] text-center font-bold dark:text-white">
-                  {username}
+                  {username && username}
                 </p>
                 <p className="text-sm dark:text-white">{userDetails?.email}</p>
               </div>
@@ -94,12 +87,14 @@ const Header = () => {
                     </button>
                   </div>
                 </Link>
-                <div
-                  onClick={signOut}
-                  className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer dark:text-white dark:hover:text-black"
-                >
+                <div className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer dark:text-white dark:hover:text-black">
                   <FaSignOutAlt />
-                  <button className="w-full text-start ">Sign Out</button>
+                  <button
+                    className="w-full text-start "
+                    onClick={handleSignOut}
+                  >
+                    Sign Out
+                  </button>
                 </div>
               </div>
             </div>
@@ -112,7 +107,7 @@ const Header = () => {
           email={userDetails?.email}
           showProfileMenu={showProfileMenu}
           setShowProfileMenu={setShowProfileMenu}
-          onclick={signOut}
+          onHandleLogout={handleSignOut}
         />
       )}
     </>

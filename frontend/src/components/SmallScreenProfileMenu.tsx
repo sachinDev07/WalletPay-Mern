@@ -8,7 +8,7 @@ interface SmallScreenProfileMenuProps {
   email: string;
   showProfileMenu: boolean;
   setShowProfileMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  onclick: () => void;
+  onHandleLogout: () => void;
 }
 
 const SmallScreenProfileMenu = ({
@@ -16,7 +16,7 @@ const SmallScreenProfileMenu = ({
   email,
   showProfileMenu,
   setShowProfileMenu,
-  onclick,
+  onHandleLogout,
 }: SmallScreenProfileMenuProps) => {
   return (
     <section
@@ -55,7 +55,7 @@ const SmallScreenProfileMenu = ({
             </div>
           </Link>
           <div
-            onClick={onclick}
+            onClick={onHandleLogout}
             className="mt-2 p-2 flex items-center space-x-2 hover:bg-slate-300 cursor-pointer rounded-md dark:text-white dark:hover:text-black dark:hover:bg-slate-300"
           >
             <FaSignOutAlt />

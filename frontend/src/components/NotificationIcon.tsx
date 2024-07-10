@@ -3,10 +3,10 @@ import { FaBell } from "react-icons/fa";
 
 import NotificationModal from "./NotificationModal";
 import { NotificationContext } from "../context/NotificationProvider";
-import axios from "../api/axios";
 import { UserProfileModalContext } from "../context/UserProfileContext";
 import useMediaQuery from "../hooks/useMediaQuery";
 import SmallScreenNotificationMenu from "./SmallScreenNotificationMenu";
+import axiosInstance from "../api/axios";
 
 interface SenderDetails {
   firstname: string;
@@ -34,7 +34,7 @@ const NotificationIcon = () => {
 
   const getNotifications = async () => {
     try {
-      const response = await axios.get<ApiResponse>("/notifications");
+      const response = await axiosInstance.get<ApiResponse>("/notifications");
       setNotifications(response.data?.notifications);
       const unreadCount = response.data?.notifications.filter(
         (notification) => !notification.read,
@@ -51,7 +51,7 @@ const NotificationIcon = () => {
       (notification) => notification._id,
     );
     try {
-      await axios.post("/notifications/mark-as-read", { notificationIds });
+      await axiosInstance.post("/notifications/mark-as-read", { notificationIds });
       getNotifications();
     } catch (error) {
       console.error(error);

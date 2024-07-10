@@ -93,7 +93,12 @@ export const signin = createAsyncThunk<
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.isLoggedIn = false;
+      localStorage.clear();
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(
       signin.fulfilled,
@@ -106,16 +111,17 @@ const authSlice = createSlice({
         state.data.email = action.payload.data.email;
         state.isLoggedIn = true;
 
-        localStorage.setItem("token", JSON.stringify(state.token));
-        localStorage.setItem("id", JSON.stringify(state.data.id));
-        localStorage.setItem("role", JSON.stringify(state.data.role));
-        localStorage.setItem("firstname", JSON.stringify(state.data.firstname));
-        localStorage.setItem("lastname", JSON.stringify(state.data.lastname));
-        localStorage.setItem("email", JSON.stringify(state.data.email));
-        localStorage.setItem("isLoggedIn", JSON.stringify(state.isLoggedIn));
+        localStorage.setItem("token", state.token);
+        localStorage.setItem("id", state.data.id);
+        localStorage.setItem("role", state.data.role);
+        localStorage.setItem("firstname", state.data.firstname);
+        localStorage.setItem("lastname", state.data.lastname);
+        localStorage.setItem("email", state.data.email);
+        localStorage.setItem("isLoggedIn", "true");
       },
     );
   },
 });
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;
