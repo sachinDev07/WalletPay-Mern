@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa6";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -52,7 +52,6 @@ const Header = () => {
           <NotificationIcon />
           <button
             onClick={(e) => {
-              console.log("clicked");
               e.stopPropagation();
               setUserProfileToggle((prev) => !prev);
               setNotificationToggle(false);

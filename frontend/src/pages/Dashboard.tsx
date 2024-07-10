@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
-
 import Balance from "../components/Balance";
 import Users from "../components/Users";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axiosInstance from "../api/axios";
 
 const Dashboard = () => {
   const [balance, setBalance] = useState<number | null>(null);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const axiosPrivate = useAxiosPrivate();
 
   async function getUserBalanceApi() {
     try {
-      const response = await axiosPrivate.get<{
+      const response = await axiosInstance.get<{
         balance: number;
         message: string;
-      }>("/account/balance");
+      }>("/account/balance", {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        }
+      });
       const data = response.data;
       setBalance(data.balance);
       setRefresh(false);
@@ -27,11 +29,14 @@ const Dashboard = () => {
     getUserBalanceApi();
   }, []);
 
-  if (refresh) {
-    setTimeout(() => {
-      getUserBalanceApi();
-    }, 1000);
-  }
+  useEffect(() => {
+    if (refresh) {
+      const refreshTimeout = setTimeout(() => {
+        getUserBalanceApi();
+      }, 1000);
+      return () => clearTimeout(refreshTimeout);
+    }
+  }, [refresh]);
 
   const handleRefreshIcon = () => {
     setRefresh(true);
@@ -40,11 +45,7 @@ const Dashboard = () => {
   return (
     <div className="md:px-44">
       <div className="px-4 md:px-0 mt-4">
-        <Balance
-          onclick={handleRefreshIcon}
-          refresh={refresh}
-          value={balance}
-        />
+        <Balance onclick={handleRefreshIcon} refresh={refresh} value={balance} />
         <Users />
       </div>
     </div>
