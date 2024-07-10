@@ -1,18 +1,15 @@
 import axios from "axios";
 
-export const BASE_URL = "https://walletpay-mern-5oft.onrender.com/api/v1";
+export const BASE_URL = "http://localhost:7001/api/v1";
 
 
-export default axios.create({
-  baseURL: BASE_URL,
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true,
-});
+const axiosInstance = axios.create();
 
-export const axiosPrivate = axios.create({
-  baseURL: BASE_URL,
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true,
-});
+axiosInstance.defaults.baseURL = BASE_URL;
+axiosInstance.defaults.withCredentials = true;
+axiosInstance.defaults.timeout = 2500
+
+export default axiosInstance;
+
 
 
