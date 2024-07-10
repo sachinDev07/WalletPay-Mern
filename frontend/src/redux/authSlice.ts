@@ -72,7 +72,6 @@ export const signin = createAsyncThunk<
       "/users/signin",
       data,
     );
-    console.log("data", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError<ValidationError>(error)) {

@@ -25,7 +25,7 @@ const Header = () => {
   const authState = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const username = authState.data.firstname + authState.data.lastname;
+  const username = authState.data.firstname + " " + authState.data.lastname;
   const { userProfileToggle, setUserProfileToggle } = useContext(
     UserProfileModalContext,
   );
@@ -75,7 +75,7 @@ const Header = () => {
                 <p className="mt-[4px] text-center font-bold dark:text-white">
                   {username && username}
                 </p>
-                <p className="text-sm dark:text-white">{userDetails?.email}</p>
+                <p className="text-sm dark:text-white">{authState.data.email}</p>
               </div>
               <div className="my-2 border-t-2 border-slate-300">
                 <Link to="/update-profile">

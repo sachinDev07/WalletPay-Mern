@@ -4,9 +4,9 @@ import * as Axios from "axios";
 
 import Spinner from "../components/Spinner";
 import useLoader from "../hooks/useLoader";
-import axios from "../api/axios";
 import { ValidationError } from "../types";
 import { useToast } from "../context/ToastContext";
+import axiosInstance from "../api/axios";
 
 type UpdateProfileData = {
   firstname: string;
@@ -38,7 +38,11 @@ const UpdateProfile = () => {
     clearError();
     try {
       startLoading();
-      const response = await axios.put("/users/update", data);
+      const response = await axiosInstance.put("/users/update", data, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        }
+      });
       clearError();
       showToast({ message: response.data.message, type: "SUCCESS" });
       navigate("/login");
