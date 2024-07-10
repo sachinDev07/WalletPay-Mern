@@ -7,7 +7,7 @@ import SearchBarSkeleton from "./Skeleton/SearchBarSkeleton";
 import Pagination from "./Pagination";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getTotalPages } from "../redux/paginationSlice";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axiosInstance from "../api/axios";
 
 interface User {
   _id: string;
@@ -20,7 +20,6 @@ export const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const axiosPrivate = useAxiosPrivate();
 
   const page = useAppSelector((store) => store.pagination.page);
   const dispatch = useAppDispatch();
@@ -36,13 +35,17 @@ export const Users = () => {
           return;
         }
 
-        const response = await axiosPrivate.get<{
+        const response = await axiosInstance.get<{
           totalUsers: number;
           data: User[];
         }>(
           `/users?userIdToExclude=${userIdToExclude}&limit=5&page=${page}&filter=` +
             filter,
-          { signal: controller.signal },
+          { 
+             headers: {
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+             },
+             signal: controller.signal },
         );
         const data = response.data;
         isMounted && setUsers(data.data);
@@ -62,7 +65,7 @@ export const Users = () => {
       isMounted = false;
       controller.abort();
     };
-  }, [filter, page, axiosPrivate, dispatch]);
+  }, [filter, page, dispatch]);
 
   if (loading) {
     return (
