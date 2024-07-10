@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import paginationSlice from "./paginationSlice";
+import authSlice from "./authSlice";
 
 const store = configureStore({
   reducer: {
     pagination: paginationSlice,
+    auth: authSlice,
   },
 });
 

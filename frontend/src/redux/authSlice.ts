@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../api/axios";
 import {
   SignInRequesPayload,
@@ -11,7 +11,7 @@ import axios from "axios";
 
 export type AuthState = {
   token: string;
-  user: {
+  data: {
     id: string;
     role: string;
     firstname: string;
@@ -23,7 +23,7 @@ export type AuthState = {
 
 const initialState: AuthState = {
   token: localStorage.getItem("token") || "",
-  user: {
+  data: {
     id: localStorage.getItem("id") || "",
     role: localStorage.getItem("role") || "",
     firstname: localStorage.getItem("firstname") || "",
@@ -72,7 +72,7 @@ export const signin = createAsyncThunk<
       "/users/signin",
       data,
     );
-
+    console.log("data", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError<ValidationError>(error)) {
@@ -86,7 +86,6 @@ export const signin = createAsyncThunk<
     } else {
       return rejectWithValue("An error occurred");
     }
-    console.error(error);
   }
   return rejectWithValue("Can't Signin, Something went wrong");
 });
@@ -95,7 +94,28 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {},
-  extraReducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(
+      signin.fulfilled,
+      (state, action: PayloadAction<SignInResponse>) => {
+        state.token = action.payload.token;
+        state.data.id = action.payload.data.id;
+        state.data.role = action.payload.data.role;
+        state.data.firstname = action.payload.data.firstname;
+        state.data.lastname = action.payload.data.lastname;
+        state.data.email = action.payload.data.email;
+        state.isLoggedIn = true;
+
+        localStorage.setItem("token", JSON.stringify(state.token));
+        localStorage.setItem("id", JSON.stringify(state.data.id));
+        localStorage.setItem("role", JSON.stringify(state.data.role));
+        localStorage.setItem("firstname", JSON.stringify(state.data.firstname));
+        localStorage.setItem("lastname", JSON.stringify(state.data.lastname));
+        localStorage.setItem("email", JSON.stringify(state.data.email));
+        localStorage.setItem("isLoggedIn", JSON.stringify(state.isLoggedIn));
+      },
+    );
+  },
 });
 
 export default authSlice.reducer;
