@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
 import { ValidationError } from "../types";
 import { useToast } from "../context/ToastContext";
+import axiosInstance from "../api/axios";
 
 type ResponseType = {
   message: string;
@@ -16,7 +16,6 @@ export const SendMoney = () => {
   const id = searchParams.get("id") as string;
   const name = searchParams.get("name") as string;
   const navigate = useNavigate();
-  const axiosPrivate = useAxiosPrivate();
   const {
     isLoading,
     startLoading,
@@ -32,9 +31,13 @@ export const SendMoney = () => {
   const handleAmount = async () => {
     try {
       startLoading();
-      const response = await axiosPrivate.post<ResponseType>("/account/transfer", {
+      const response = await axiosInstance.post<ResponseType>("/account/transfer", {
         amount,
         to: id,
+      }, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        }
       });
       clearError();
       showToast({ message: response.data.message, type: "SUCCESS"})
