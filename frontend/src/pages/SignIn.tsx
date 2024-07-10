@@ -7,18 +7,25 @@ import SubHeading from "../components/SubHeading";
 import useLoader from "../hooks/useLoader";
 import Spinner from "../components/Spinner";
 import { useToast } from "../context/ToastContext";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
 import { signin } from "../redux/authSlice";
+import { useEffect } from "react";
 
 type FormData = {
   email: string;
   password: string;
 };
 
-
 const SignIn = () => {
-  const { isLoading, startLoading, stopLoading, isError, setError, clearError } = useLoader();
+  const {
+    isLoading,
+    startLoading,
+    stopLoading,
+    isError,
+    setError,
+    clearError,
+  } = useLoader();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const {
@@ -28,7 +35,7 @@ const SignIn = () => {
   } = useForm<FormData>();
 
   const dispatch = useDispatch<AppDispatch>();
-
+  const authState = useSelector((state: RootState) => state.auth);
 
   const onSubmit = async (data: FormData) => {
     startLoading();
@@ -49,7 +56,13 @@ const SignIn = () => {
     clearError();
   };
 
-  return (
+  useEffect(() => {
+    if (authState.isLoggedIn) {
+      navigate("/");
+    }
+  }, [authState.isLoggedIn, navigate]);
+
+  return !authState.isLoggedIn ? (
     <div className="bg-slate-300 h-screen flex justify-center">
       <div className="flex flex-col justify-center">
         <div className="rounded-lg bg-white w-80 p-2 h-max px-4">
@@ -110,7 +123,7 @@ const SignIn = () => {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default SignIn;
