@@ -18,7 +18,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: ServerConfig.FRONTEND_URL,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
+    optionsSuccessStatus: 204,
   }),
 );
 app.use(cookieParser());
