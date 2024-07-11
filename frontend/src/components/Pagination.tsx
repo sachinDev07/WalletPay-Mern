@@ -38,7 +38,7 @@ const Pagination = () => {
           page < totalPages
             ? "block hover:text-slate-900 transition duration-150 ease-in-out cursor-pointer"
             : "opacity-0"
-        }  text-slate-700 text-lg md:text-lg ml-2 dark:text-white`}
+        }  text-slate-700 text-sm md:text-lg ml-2 dark:text-white`}
       />
     </div>
   );
