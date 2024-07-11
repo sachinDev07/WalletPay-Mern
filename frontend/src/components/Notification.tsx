@@ -1,7 +1,7 @@
 import { MdOutlineDeleteOutline } from "react-icons/md";
 
 import CharacterLogo from "./CharacterLogo";
-import axios from "../api/axios";
+import axiosInstance from "../api/axios";
 
 type NotificationType = {
   id: string;
@@ -20,8 +20,11 @@ const Notification = ({
 }: NotificationType) => {
   const deleteNotification = async (id: string) => {
     try {
-      await axios.delete("/notifications/delete", {
+      await axiosInstance.delete("/notifications/delete", {
         data: { id },
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        }
       });
       refreshNotifications();
     } catch (error) {
