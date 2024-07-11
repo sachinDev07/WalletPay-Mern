@@ -6,7 +6,7 @@ const Pagination = () => {
   const { page, totalPages } = useAppSelector((store) => store.pagination);
   const dispatch = useAppDispatch();
   return (
-    <div className="absolute w-[250px] right-1/2 left-1/2 -translate-x-1/2 bottom-[10%] flex items-center justify-center gap-2">
+    <div className="absolute w-[260px] right-1/2 left-1/2 -translate-x-1/2 bottom-[10%] flex items-center justify-center gap-2">
       <FaLessThan
         onClick={() => dispatch(prevButton())}
         className={`${
@@ -38,7 +38,7 @@ const Pagination = () => {
           page < totalPages
             ? "block hover:text-slate-900 transition duration-150 ease-in-out cursor-pointer"
             : "opacity-0"
-        }  text-slate-700 text-sm md:text-lg ml-2 dark:text-white`}
+        }  text-slate-700 text-lg md:text-lg ml-2 dark:text-white`}
       />
     </div>
   );

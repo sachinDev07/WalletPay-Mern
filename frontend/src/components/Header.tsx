@@ -49,18 +49,20 @@ const Header = () => {
         </div>
         <div className="flex justify-between items-center gap-2">
           <ThemeBtn />
-          <NotificationIcon />
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setUserProfileToggle((prev) => !prev);
-              setNotificationToggle(false);
-              setShowProfileMenu(true);
-            }}
-            className="rounded-full h-7 w-7 md:h-8 md:w-8 bg-gray-200 hover:bg-gray-300 text-lg md:text-xl font-bold flex justify-center items-center cursor-pointer active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200 transition duration-150 ease-in-out"
-          >
-            {username && username.charAt(0).toUpperCase()}
-          </button>
+          {authState.isLoggedIn && <NotificationIcon />}
+          {authState.isLoggedIn && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setUserProfileToggle((prev) => !prev);
+                setNotificationToggle(false);
+                setShowProfileMenu(true);
+              }}
+              className="rounded-full h-7 w-7 md:h-8 md:w-8 bg-gray-200 hover:bg-gray-300 text-lg md:text-xl font-bold flex justify-center items-center cursor-pointer active:bg-slate-300 dark:bg-white dark:hover:bg-slate-200 transition duration-150 ease-in-out"
+            >
+              {username && username.charAt(0).toUpperCase()}
+            </button>
+          )}
           {isAboveMediumScreens && userProfileToggle && (
             <div className="absolute top-14 right-24 border-2 border-slate-400 rounded-md w-64 bg-white shadow-lg dark:bg-slate-800">
               <div className="flex flex-col items-center p-2">
@@ -75,7 +77,9 @@ const Header = () => {
                 <p className="mt-[4px] text-center font-bold dark:text-white">
                   {username && username}
                 </p>
-                <p className="text-sm dark:text-white">{authState.data.email}</p>
+                <p className="text-sm dark:text-white">
+                  {authState.data.email}
+                </p>
               </div>
               <div className="my-2 border-t-2 border-slate-300">
                 <Link to="/update-profile">

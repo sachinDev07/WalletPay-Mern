@@ -34,7 +34,11 @@ const NotificationIcon = () => {
 
   const getNotifications = async () => {
     try {
-      const response = await axiosInstance.get<ApiResponse>("/notifications");
+      const response = await axiosInstance.get<ApiResponse>("/notifications", {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        }
+      });
       setNotifications(response.data?.notifications);
       const unreadCount = response.data?.notifications.filter(
         (notification) => !notification.read,
@@ -51,7 +55,11 @@ const NotificationIcon = () => {
       (notification) => notification._id,
     );
     try {
-      await axiosInstance.post("/notifications/mark-as-read", { notificationIds });
+      await axiosInstance.post("/notifications/mark-as-read", { notificationIds }, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        }
+      });
       getNotifications();
     } catch (error) {
       console.error(error);
